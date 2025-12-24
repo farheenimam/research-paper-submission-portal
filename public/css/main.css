@@ -1,0 +1,223 @@
+/* Main CSS File - Research Portal */
+
+/* Simple Colors */
+.primary-color { color: #2d5016; }
+.white-color { color: #ffffff; }
+.text-dark { color: #333333; }
+.text-light { color: #666666; }
+
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    color: #333333;
+    background-color: #ffffff;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+    color: #2d5016;
+    margin-bottom: 15px;
+}
+
+h1 { font-size: 32px; }
+h2 { font-size: 28px; }
+h3 { font-size: 24px; }
+h4 { font-size: 20px; }
+h5 { font-size: 18px; }
+h6 { font-size: 16px; }
+
+p {
+    margin-bottom: 15px;
+    color: #666666;
+}
+
+a {
+    color: #2d5016;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #4a7c2a;
+}
+
+/* Container */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Buttons */
+.btn {
+    display: inline-block;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    text-align: center;
+    text-decoration: none;
+}
+
+.btn-primary {
+    background-color: #2d5016;
+    color: #ffffff;
+}
+
+.btn-primary:hover {
+    background-color: #1a3009;
+    color: #ffffff;
+}
+
+.btn-outline {
+    background-color: transparent;
+    color: #2d5016;
+    border: 2px solid #2d5016;
+}
+
+.btn-outline:hover {
+    background-color: #2d5016;
+    color: #ffffff;
+}
+
+/* Forms */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #333333;
+}
+
+.form-control {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #e0e0e0;
+    border-radius: 5px;
+    font-size: 16px;
+    background-color: #ffffff;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: #2d5016;
+}
+
+/* Alerts */
+.alert {
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.alert-error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+/* Cards */
+.card {
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    padding: 30px;
+    margin-bottom: 30px;
+}
+
+/* Utility Classes */
+.text-center { text-align: center; }
+.mb-20 { margin-bottom: 20px; }
+.mt-20 { margin-top: 20px; }
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 15px;
+    }
+    
+    h1 { font-size: 28px; }
+    h2 { font-size: 24px; }
+    
+    .btn {
+        padding: 10px 20px;
+        font-size: 14px;
+    }
+    
+    .card {
+        padding: 20px;
+    }
+    
+    /* Hero Section Mobile */
+    .hero-content {
+        flex-direction: column;
+        gap: 40px;
+        text-align: center;
+    }
+    
+    .hero-text {
+        min-width: auto;
+    }
+    
+    .hero-content h1 {
+        font-size: 32px;
+    }
+    
+    .search-form {
+        flex-direction: column;
+        max-width: 100%;
+    }
+    
+    .search-input {
+        border-right: 2px solid #e0e0e0;
+        border-bottom: none;
+    }
+    
+    .search-btn {
+        border-top: none;
+    }
+    
+    .hero-visual {
+        min-width: auto;
+    }
+    
+    .world-map {
+        width: 300px;
+        height: 200px;
+    }
+    
+    .core-logo {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .core-text {
+        font-size: 10px;
+    }
+    
+    .research-icon {
+        width: 25px;
+        height: 25px;
+        font-size: 12px;
+    }
+}

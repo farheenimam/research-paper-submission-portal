@@ -1,0 +1,82 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Paper;
+use App\Models\PaperAuthor;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
+
+class DashboardController extends Controller
+{
+    public function index()
+    {
+        $user = Auth::user();
+        $papers = Paper::where('uploaded_by', $user->id)
+                      ->with('authors')
+                      ->orderBy('created_at', 'desc')
+                      ->get();
+        
+        return view('dashboard.index', compact('user', 'papers'));
+    }
+
+    public function uploadPaper()
+    {
+        return view('dashboard.upload-paper');
+    }
+
+    public function storePaper(Request $request)
+    {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'abstract' => 'required|string',
+            'pdf_file' => 'required|file|mimes:pdf|max:10240', // 10MB max
+            'publication_year' => 'required|integer|min:1900|max:' . (date('Y') + 1),
+            'authors' => 'required|array|min:1',
+            'authors.*.name' => 'required|string|max:150',
+            'authors.*.email' => 'nullable|email|max:150',
+            'authors.*.affiliation' => 'nullable|string|max:255',
+        ]);
+
+        // Handle PDF upload
+        $pdfFile = $request->file('pdf_file');
+        $filename = time() . '_' . $pdfFile->getClientOriginalName();
+        $pdfPath = 'papers/' . $filename;
+        $pdfFile->move(public_path('papers'), $filename);
+
+        // Create paper record
+        $paper = Paper::create([
+            'title' => $request->title,
+            'abstract' => $request->abstract,
+            'pdf_path' => $pdfPath,
+            'publication_year' => $request->publication_year,
+            'status' => 'pending',
+            'uploaded_by' => Auth::id(),
+        ]);
+
+        // Create author records
+        foreach ($request->authors as $authorData) {
+            PaperAuthor::create([
+                'paper_id' => $paper->id,
+                'user_id' => null, // We could match by email later
+                'author_name' => $authorData['name'],
+                'author_email' => $authorData['email'] ?? null,
+                'affiliation' => $authorData['affiliation'] ?? null,
+            ]);
+        }
+
+        Session::flash('success', 'Paper uploaded successfully! It is now pending review.');
+        return redirect()->route('dashboard');
+    }
+
+    public function viewPaper($id)
+    {
+        $paper = Paper::with('authors', 'uploader')
+                     ->where('id', $id)
+                     ->where('uploaded_by', Auth::id())
+                     ->firstOrFail();
+        
+        return view('dashboard.view-paper', compact('paper'));
+    }
+}
