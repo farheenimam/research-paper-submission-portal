@@ -1,33 +1,33 @@
 @extends('layout')
 
-@section('title', 'Articles - Research Portal')
-@section('description', 'Review and manage research papers as a reviewer.')
+@section('title', 'My Review History - Research Portal')
+@section('description', 'View all papers you have reviewed.')
 
 @section('content')
 <div class="articles-page">
     <div class="container">
         <!-- Page Header -->
         <div class="page-header">
-            <h1>Articles</h1>
-            <p>Review and manage research papers</p>
+            <h1>My Review History</h1>
+            <p>Papers you have reviewed</p>
         </div>
 
         <!-- Search and Filter Section -->
         <div class="search-filter-section">
-            <form class="search-filter-form" action="{{ route('reviewer.articles') }}" method="GET">
+            <form class="search-filter-form" action="{{ route('reviewer.history') }}" method="GET">
                 <div class="search-wrapper">
                     <input type="text" 
                            class="search-input-articles" 
                            name="search"
                            value="{{ $query }}"
-                           placeholder="Search research papers..."
+                           placeholder="Search reviewed papers..."
                            autocomplete="off">
                     <button type="submit" class="search-btn-articles">SEARCH</button>
                 </div>
                 
                 <div class="filter-wrapper">
                     <label for="status-filter" class="filter-label">Filter by Status:</label>
-                    <select name="status" id="status-filter" class="status-filter">
+                    <select name="status" id="status-filter" class="status-filter" onchange="this.form.submit()">
                         <option value="all" {{ $statusFilter === 'all' ? 'selected' : '' }}>All Papers</option>
                         <option value="pending" {{ $statusFilter === 'pending' ? 'selected' : '' }}>Pending</option>
                         <option value="approved" {{ $statusFilter === 'approved' ? 'selected' : '' }}>Approved</option>
@@ -40,51 +40,8 @@
             </form>
         </div>
 
-        <!-- Additional Filters Section -->
-        <div class="search-filters-section">
-            <form class="filters-form" action="{{ route('reviewer.articles') }}" method="GET">
-                <input type="hidden" name="search" value="{{ $query }}">
-                <input type="hidden" name="status" value="{{ $statusFilter }}">
-                
-                <div class="filters-grid">
-                    <div class="filter-group">
-                        <label for="category" class="filter-label">Category</label>
-                        <select name="category" id="category" class="filter-select">
-                            <option value="">All Categories</option>
-                            @if(isset($categories))
-                                @foreach($categories as $category)
-                                    <option value="{{ $category->id }}" {{ $categoryId == $category->id ? 'selected' : '' }}>
-                                        {{ $category->name }}
-                                    </option>
-                                @endforeach
-                            @endif
-                        </select>
-                    </div>
-
-                    <div class="filter-group">
-                        <label for="year" class="filter-label">Publication Year</label>
-                        <select name="year" id="year" class="filter-select">
-                            <option value="">All Years</option>
-                            @if(isset($availableYears))
-                                @foreach($availableYears as $availableYear)
-                                    <option value="{{ $availableYear }}" {{ $year == $availableYear ? 'selected' : '' }}>
-                                        {{ $availableYear }}
-                                    </option>
-                                @endforeach
-                            @endif
-                        </select>
-                    </div>
-
-                    <div class="filter-actions">
-                        <button type="submit" class="btn-filter-apply">Apply Filters</button>
-                        <a href="{{ route('reviewer.articles') }}{{ !empty($query) || $statusFilter !== 'all' ? '?' . http_build_query(array_filter(['search' => $query, 'status' => $statusFilter !== 'all' ? $statusFilter : null])) : '' }}" class="btn-filter-clear">Clear</a>
-                    </div>
-                </div>
-            </form>
-        </div>
-
         <!-- Results Info -->
-        @if(!empty($query) || $statusFilter !== 'all' || !empty($categoryId) || !empty($year))
+        @if(!empty($query) || $statusFilter !== 'all')
             <div class="results-info">
                 <p>
                     @if($totalResults > 0)
@@ -144,8 +101,24 @@
                             <span class="upload-date">📤 {{ $paper->created_at->format('M d, Y') }}</span>
                         </div>
 
+                        @if($paper->comments->count() > 0)
+                            <div class="review-info">
+                                <strong>📝 Your Review:</strong>
+                                <span class="review-date">Reviewed on {{ $paper->comments->first()->created_at->format('M d, Y') }}</span>
+                                @if($paper->comments->count() > 1)
+                                    <span class="review-count">({{ $paper->comments->count() }} comments)</span>
+                                @endif
+                            </div>
+                        @endif
+
+                        @if($paper->approved_by == Auth::id())
+                            <div class="approval-info">
+                                <strong>✅ Approved by you</strong>
+                            </div>
+                        @endif
+
                         <div class="paper-actions-articles">
-                            <a href="{{ route('reviewer.review', $paper->id) }}" class="btn btn-outline btn-sm">Review</a>
+                            <a href="{{ route('reviewer.review', $paper->id) }}" class="btn btn-outline btn-sm">View Review</a>
                             <a href="{{ asset($paper->pdf_path) }}" target="_blank" class="btn btn-primary btn-sm">Download PDF</a>
                         </div>
                     </div>
@@ -155,19 +128,14 @@
             <!-- Pagination -->
             @if($papers->hasPages())
                 <div class="pagination-wrapper">
-                    {{ $papers->appends([
-                        'search' => $query,
-                        'status' => $statusFilter,
-                        'category' => $categoryId,
-                        'year' => $year
-                    ])->links() }}
+                    {{ $papers->appends(['search' => $query, 'status' => $statusFilter])->links() }}
                 </div>
             @endif
         @else
             <div class="no-results">
                 <div class="no-results-icon">📄</div>
-                <h3>No papers found</h3>
-                <p>Try adjusting your search or filter criteria</p>
+                <h3>No reviewed papers found</h3>
+                <p>You haven't reviewed any papers yet. <a href="{{ route('reviewer.articles') }}">Start reviewing papers</a></p>
             </div>
         @endif
     </div>
@@ -176,5 +144,43 @@
 
 @section('styles')
 <link href="{{ asset('css/articles.css') }}" rel="stylesheet">
+<style>
+.review-info {
+    margin: 15px 0;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    border-left: 3px solid #2d5016;
+}
+
+.review-info strong {
+    color: #2d5016;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.review-date {
+    color: #666666;
+    font-size: 14px;
+    display: block;
+}
+
+.review-count {
+    color: #2d5016;
+    font-size: 12px;
+    font-weight: 600;
+    margin-left: 5px;
+}
+
+.approval-info {
+    margin: 10px 0;
+    padding: 8px;
+    background-color: #d4edda;
+    border-radius: 5px;
+    color: #155724;
+    font-size: 14px;
+    text-align: center;
+}
+</style>
 @endsection
 

@@ -88,13 +88,12 @@
             <div class="join-card researcher-card">
                 <div class="join-icon">🔬</div>
                 <h3>Join as a Researcher</h3>
-                <p>Share your research, collaborate with peers, and contribute to the advancement of knowledge in your field.</p>
+                <p>Share your research and collaborate with peers.</p>
                 
                 <div class="benefits-list">
-                    <div class="benefit-item">✓ Publish your research papers</div>
-                    <div class="benefit-item">✓ Access to research database</div>
-                    <div class="benefit-item">✓ Collaboration opportunities</div>
-                    <div class="benefit-item">✓ Research analytics and insights</div>
+                    <div class="benefit-item">✓ Publish research papers</div>
+                    <div class="benefit-item">✓ Access research database</div>
+                    <div class="benefit-item">✓ Collaboration tools</div>
                 </div>
                 
                 <a href="{{ route('registration') }}?role=researcher" class="btn btn-primary">Join as Researcher</a>
@@ -104,16 +103,30 @@
             <div class="join-card reviewer-card">
                 <div class="join-icon">📋</div>
                 <h3>Join as a Reviewer</h3>
-                <p>Help maintain the quality of academic research by participating in the peer review process.</p>
+                <p>Help maintain research quality through peer review.</p>
                 
                 <div class="benefits-list">
                     <div class="benefit-item">✓ Review research papers</div>
                     <div class="benefit-item">✓ Shape research standards</div>
-                    <div class="benefit-item">✓ Recognition in academic community</div>
-                    <div class="benefit-item">✓ Access to latest research</div>
+                    <div class="benefit-item">✓ Academic recognition</div>
                 </div>
                 
                 <a href="{{ route('registration') }}?role=reviewer" class="btn btn-outline">Join as Reviewer</a>
+            </div>
+            
+            <!-- Join as Reader -->
+            <div class="join-card reader-card">
+                <div class="join-icon">📚</div>
+                <h3>Join as a Reader</h3>
+                <p>Access and explore a vast collection of research papers.</p>
+                
+                <div class="benefits-list">
+                    <div class="benefit-item">✓ Browse research papers</div>
+                    <div class="benefit-item">✓ Download publications</div>
+                    <div class="benefit-item">✓ Stay updated with research</div>
+                </div>
+                
+                <a href="{{ route('registration') }}?role=reader" class="btn btn-outline">Join as Reader</a>
             </div>
         </div>
     </div>
@@ -166,9 +179,9 @@
             <h2>Ready to Start Your Research Journey?</h2>
             <p>Join thousands of researchers and reviewers who are already part of our community.</p>
             @guest
-                <a href="{{ route('registration') }}" class="btn btn-primary">Get Started Today</a>
+                <a href="#join-us" class="btn btn-primary">Get Started Today</a>
             @else
-                <a href="#" class="btn btn-primary">Explore Dashboard</a>
+                <a href="{{ route('dashboard') }}" class="btn btn-primary">Explore Dashboard</a>
             @endguest
         </div>
     </div>
@@ -349,20 +362,26 @@
 
 .join-options {
     display: flex;
-    gap: 40px;
+    gap: 25px;
     justify-content: center;
     flex-wrap: wrap;
 }
 
 .join-card {
     background: #ffffff;
-    border: 3px solid #e0e0e0;
-    border-radius: 15px;
-    padding: 40px 30px;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 25px 20px;
     text-align: center;
     flex: 1;
-    min-width: 350px;
-    max-width: 450px;
+    min-width: 280px;
+    max-width: 320px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.join-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
 
 .researcher-card {
@@ -373,32 +392,38 @@
     border-color: #4a7c2a;
 }
 
+.reader-card {
+    border-color: #6c757d;
+}
+
 .join-icon {
-    font-size: 64px;
-    margin-bottom: 20px;
+    font-size: 48px;
+    margin-bottom: 15px;
 }
 
 .join-card h3 {
     color: #2d5016;
-    margin-bottom: 15px;
-    font-size: 28px;
+    margin-bottom: 10px;
+    font-size: 22px;
 }
 
 .join-card p {
     color: #666666;
-    margin-bottom: 30px;
-    line-height: 1.6;
+    margin-bottom: 20px;
+    line-height: 1.5;
+    font-size: 14px;
 }
 
 .benefits-list {
     text-align: left;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
 }
 
 .benefit-item {
     color: #333333;
-    margin-bottom: 10px;
-    padding-left: 10px;
+    margin-bottom: 8px;
+    padding-left: 8px;
+    font-size: 13px;
 }
 
 /* About Section */
@@ -557,6 +582,36 @@
     .join-options {
         flex-direction: column;
         align-items: center;
+        gap: 20px;
+    }
+    
+    .join-card {
+        min-width: 100%;
+        max-width: 100%;
+        padding: 20px 15px;
+    }
+    
+    .join-icon {
+        font-size: 40px;
+        margin-bottom: 12px;
+    }
+    
+    .join-card h3 {
+        font-size: 20px;
+    }
+    
+    .join-card p {
+        font-size: 13px;
+        margin-bottom: 15px;
+    }
+    
+    .benefits-list {
+        margin-bottom: 15px;
+    }
+    
+    .benefit-item {
+        font-size: 12px;
+        margin-bottom: 6px;
     }
     
     .about-content {

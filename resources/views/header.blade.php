@@ -36,14 +36,53 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="#join-us" class="nav-link">
+                        <a href="{{ route('welcome') }}#join-us" class="nav-link">
                             Join Us
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('login') }}" class="nav-link nav-login-btn">
+                            Login
                         </a>
                     </li>
                 @endguest
 
                 @auth
-                    @if(Auth::user()->role_id == 3)
+                    @if(Auth::user()->email === 'farheenimam@gmail.com')
+                        <!-- Admin navigation links -->
+                        <li class="nav-item">
+                            <a href="{{ route('admin.dashboard') }}" class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
+                                Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.dashboard') }}#users" class="nav-link">
+                                Users
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.dashboard') }}#papers" class="nav-link">
+                                Papers
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.dashboard') }}#authors" class="nav-link">
+                                Authors
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.dashboard') }}#categories" class="nav-link">
+                                Categories
+                            </a>
+                        </li>
+                    @elseif(Auth::user()->role_id == 4)
+                        <!-- Search link for readers (role_id 4) -->
+                        <li class="nav-item">
+                            <a href="{{ route('search') }}" class="nav-link {{ request()->routeIs('search') ? 'active' : '' }}">
+                                Search
+                            </a>
+                        </li>
+                    @elseif(Auth::user()->role_id == 3)
                         <!-- Articles link for reviewers (role_id 3) -->
                         <li class="nav-item">
                             <a href="{{ route('reviewer.articles') }}" class="nav-link {{ request()->routeIs('reviewer.articles') ? 'active' : '' }}">
@@ -55,6 +94,12 @@
                         <li class="nav-item">
                             <a href="{{ route('paper.recent') }}" class="nav-link {{ request()->routeIs('paper.recent') ? 'active' : '' }}">
                                 Recent research work
+                            </a>
+                        </li>
+                        <!-- My Research link for non-reviewers -->
+                        <li class="nav-item">
+                            <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard*') ? 'active' : '' }}">
+                                My Research
                             </a>
                         </li>
                     @endif
@@ -77,13 +122,17 @@
                             <a href="{{ route('profile') }}" class="dropdown-item">
                                 👤 My Profile
                             </a>
-                            @if(Auth::user()->role_id == 3)
-                                <a href="{{ route('reviewer.articles') }}" class="dropdown-item">
-                                    📄 Articles
+                            @if(Auth::user()->role_id == 4)
+                                <a href="{{ route('reader.saved-papers') }}" class="dropdown-item">
+                                    📄 Saved Papers
+                                </a>
+                            @elseif(Auth::user()->role_id == 3)
+                                <a href="{{ route('reviewer.history') }}" class="dropdown-item">
+                                    📄 My History
                                 </a>
                             @else
-                                <a href="{{ route('dashboard') }}" class="dropdown-item">
-                                    📄 My Research
+                                <a href="{{ route('dashboard.upload-paper') }}" class="dropdown-item">
+                                    📤 Upload Research
                                 </a>
                             @endif
                             <div class="dropdown-divider"></div>

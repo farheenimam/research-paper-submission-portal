@@ -74,6 +74,23 @@
     background-color: #f8f9fa;
 }
 
+/* Login Button for Guests */
+.nav-login-btn {
+    background-color: #2d5016;
+    color: #ffffff !important;
+    font-weight: 600;
+    padding: 10px 20px;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+}
+
+.nav-login-btn:hover {
+    background-color: #1a3009;
+    color: #ffffff !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(45, 80, 22, 0.3);
+}
+
 /* Navigation Search */
 .search-item {
     margin: 0 20px;

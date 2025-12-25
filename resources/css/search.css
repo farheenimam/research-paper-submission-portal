@@ -35,10 +35,10 @@
 
 .search-input-page {
     flex: 1;
-    padding: 18px 24px;
+    padding: 12px 20px;
     border: 2px solid #e0e0e0;
     border-right: none;
-    font-size: 18px;
+    font-size: 15px;
     outline: none;
     background-color: #ffffff;
 }
@@ -175,6 +175,12 @@
     gap: 25px;
 }
 
+.papers-list-horizontal {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
 .paper-result {
     background: #ffffff;
     border-radius: 12px;
@@ -186,6 +192,114 @@
 .paper-result:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+/* Horizontal Paper Result Layout */
+.paper-result-horizontal {
+    background: #ffffff;
+    border-left: 3px solid #2d5016;
+    padding: 20px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.paper-result-horizontal:hover {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.paper-result-content {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.paper-result-title-horizontal {
+    margin: 0 0 5px 0;
+    font-size: 18px;
+    line-height: 1.4;
+}
+
+.paper-result-title-horizontal a {
+    color: #1a0dab;
+    text-decoration: none;
+    font-weight: 400;
+}
+
+.paper-result-title-horizontal a:hover {
+    text-decoration: underline;
+}
+
+.paper-result-authors-horizontal {
+    color: #006621;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.author-name-horizontal {
+    color: #006621;
+}
+
+.more-authors {
+    color: #006621;
+}
+
+.paper-source {
+    color: #006621;
+}
+
+.paper-result-abstract-horizontal {
+    color: #545454;
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 10px;
+}
+
+.paper-result-abstract-horizontal p {
+    margin: 0;
+}
+
+.paper-result-actions-horizontal {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-top: 5px;
+}
+
+.btn-save-paper {
+    background: transparent;
+    border: none;
+    color: #1a0dab;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 5px 10px;
+    border-radius: 3px;
+    transition: all 0.2s ease;
+}
+
+.btn-save-paper:hover {
+    background-color: #f0f0f0;
+    text-decoration: underline;
+}
+
+.btn-save-paper.saved {
+    color: #006621;
+    font-weight: 600;
+}
+
+.btn-link-action {
+    color: #1a0dab;
+    text-decoration: none;
+    font-size: 14px;
+    padding: 5px 10px;
+    border-radius: 3px;
+    transition: all 0.2s ease;
+}
+
+.btn-link-action:hover {
+    background-color: #f0f0f0;
+    text-decoration: underline;
 }
 
 .paper-result-header {

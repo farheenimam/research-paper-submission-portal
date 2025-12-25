@@ -44,10 +44,10 @@
 
 .search-input-articles {
     flex: 1;
-    padding: 15px 20px;
+    padding: 12px 18px;
     border: 2px solid #e0e0e0;
     border-radius: 8px;
-    font-size: 16px;
+    font-size: 15px;
     outline: none;
     background-color: #ffffff;
 }
@@ -60,13 +60,14 @@
     background-color: #2d5016;
     color: #ffffff;
     border: none;
-    padding: 15px 30px;
-    font-size: 16px;
-    font-weight: bold;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 600;
     cursor: pointer;
     border-radius: 8px;
-    letter-spacing: 1px;
+    letter-spacing: 0.5px;
     white-space: nowrap;
+    transition: background-color 0.3s ease;
 }
 
 .search-btn-articles:hover {
@@ -372,6 +373,114 @@
     }
     
     .paper-actions-articles .btn {
+        width: 100%;
+    }
+}
+
+/* Search Filters Section */
+.search-filters-section {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+}
+
+.filters-form {
+    width: 100%;
+}
+
+.filters-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 15px;
+    align-items: end;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.filter-label {
+    font-weight: 600;
+    color: #2d5016;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.filter-select {
+    padding: 10px 12px;
+    border: 2px solid #e0e0e0;
+    border-radius: 6px;
+    font-size: 14px;
+    background-color: #ffffff;
+    cursor: pointer;
+    width: 100%;
+    transition: border-color 0.3s ease;
+}
+
+.filter-select:focus {
+    outline: none;
+    border-color: #2d5016;
+}
+
+.filter-actions {
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+}
+
+.btn-filter-apply {
+    background-color: #2d5016;
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    white-space: nowrap;
+}
+
+.btn-filter-apply:hover {
+    background-color: #1a3009;
+}
+
+.btn-filter-clear {
+    background-color: #f8f9fa;
+    color: #2d5016;
+    border: 2px solid #e0e0e0;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    display: inline-block;
+}
+
+.btn-filter-clear:hover {
+    background-color: #e9ecef;
+    border-color: #2d5016;
+}
+
+@media (max-width: 768px) {
+    .filters-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+    
+    .filter-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .btn-filter-apply,
+    .btn-filter-clear {
         width: 100%;
     }
 }

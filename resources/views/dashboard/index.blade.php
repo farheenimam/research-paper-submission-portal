@@ -90,7 +90,7 @@
                             </div>
                             
                             <div class="paper-actions">
-                                <a href="{{ route('dashboard.view-paper', $paper->id) }}" class="btn btn-outline">View Details</a>
+                                <a href="{{ route('dashboard.edit-paper', $paper->id) }}" class="btn btn-outline">Update</a>
                                 <a href="{{ asset($paper->pdf_path) }}" target="_blank" class="btn btn-outline">Download PDF</a>
                             </div>
                         </div>

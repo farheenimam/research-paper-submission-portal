@@ -23,7 +23,26 @@ class AuthController extends Controller
         // Check if role is specified in URL parameter
         $selectedRole = null;
         if ($request->has('role')) {
-            $selectedRole = $roles->where('name', $request->role)->first();
+            $roleName = strtolower(trim($request->role));
+            
+            // Try to find by name (case-insensitive)
+            $selectedRole = $roles->first(function($role) use ($roleName) {
+                return strtolower($role->name) === $roleName;
+            });
+            
+            // If not found by name, try to find by ID
+            if (!$selectedRole) {
+                if ($roleName === 'reviewer') {
+                    $selectedRole = \App\Models\Role::find(3);
+                } elseif ($roleName === 'reader') {
+                    $selectedRole = \App\Models\Role::find(4);
+                } elseif ($roleName === 'researcher') {
+                    // Try to find researcher by name or common ID
+                    $selectedRole = $roles->first(function($role) {
+                        return strtolower($role->name) === 'researcher';
+                    });
+                }
+            }
         }
         
         return view('auth.register', compact('roles', 'defaultRole', 'selectedRole'));
@@ -59,6 +78,7 @@ class AuthController extends Controller
        // Set role ID - use pre-selected role or determine default
        $roleId = null;
        if ($preSelectedRole) {
+           // Force use the pre-selected role ID (cannot be changed)
            $roleId = $preSelectedRole->id;
        } else {
            // Set default role to 'user' if not provided
@@ -134,9 +154,18 @@ class AuthController extends Controller
             
             Session::flash('success', 'Welcome back, ' . $user->name . '!');
             
-            // Redirect reviewers (role_id 3) to articles page, others to welcome
+            // Hardcoded admin email redirect
+            if ($user->email === 'farheenimam@gmail.com') {
+                return redirect()->route('admin.dashboard');
+            }
+            
+            // Redirect based on role
             if ($user->role_id == 3) {
+                // Reviewers go to articles page
                 return redirect()->route('reviewer.articles');
+            } elseif ($user->role_id == 4) {
+                // Readers go to search page
+                return redirect()->route('search');
             }
             
             return redirect()->route('welcome');

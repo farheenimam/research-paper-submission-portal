@@ -1,14 +1,14 @@
 @extends('layout')
 
-@section('title', 'Upload Paper - Research Portal')
-@section('description', 'Upload your research paper to Research Portal for peer review.')
+@section('title', 'Update Paper - Research Portal')
+@section('description', 'Update your research paper on Research Portal.')
 
 @section('content')
 <div class="upload-container">
     <div class="container">
         <div class="upload-header">
-            <h1>Upload Research Paper</h1>
-            <p>Submit your research paper for peer review and publication</p>
+            <h1>Update Research Paper</h1>
+            <p>Update your research paper information</p>
         </div>
 
         @if($errors->any())
@@ -21,8 +21,15 @@
             </div>
         @endif
 
-        <form method="POST" action="{{ route('dashboard.store-paper') }}" enctype="multipart/form-data" class="upload-form">
+        @if(Session::has('success'))
+            <div class="alert alert-success">
+                {{ Session::get('success') }}
+            </div>
+        @endif
+
+        <form method="POST" action="{{ route('dashboard.update-paper', $paper->id) }}" enctype="multipart/form-data" class="upload-form">
             @csrf
+            @method('PUT')
             
             <!-- Paper Information -->
             <div class="form-section">
@@ -32,14 +39,14 @@
                     <label for="title" class="form-label">Paper Title <span class="required">*</span></label>
                     <input type="text" id="title" name="title" class="form-control" 
                            placeholder="Enter the title of your research paper" 
-                           value="{{ old('title') }}" required maxlength="255">
+                           value="{{ old('title', $paper->title) }}" required maxlength="255">
                 </div>
 
                 <div class="form-group">
                     <label for="abstract" class="form-label">Abstract <span class="required">*</span></label>
                     <textarea id="abstract" name="abstract" class="form-control abstract-field" 
                               placeholder="Provide a comprehensive abstract of your research paper" 
-                              required>{{ old('abstract') }}</textarea>
+                              required>{{ old('abstract', $paper->abstract) }}</textarea>
                     <div class="help-text">Provide a detailed summary of your research, methodology, and findings.</div>
                 </div>
 
@@ -47,7 +54,7 @@
                     <label for="publication_year" class="form-label">Publication Year <span class="required">*</span></label>
                     <input type="number" id="publication_year" name="publication_year" class="form-control" 
                            min="1900" max="{{ date('Y') + 1 }}" 
-                           value="{{ old('publication_year', date('Y')) }}" required>
+                           value="{{ old('publication_year', $paper->publication_year) }}" required>
                 </div>
 
                 <div class="form-group">
@@ -56,7 +63,8 @@
                         <option value="">Select a category</option>
                         @if(isset($categories))
                             @foreach($categories as $category)
-                                <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
+                                <option value="{{ $category->id }}" 
+                                    {{ old('category_id', $paper->categories->first()->id ?? '') == $category->id ? 'selected' : '' }}>
                                     {{ $category->name }}
                                 </option>
                             @endforeach
@@ -66,10 +74,16 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="pdf_file" class="form-label">PDF File <span class="required">*</span></label>
-                    <input type="file" id="pdf_file" name="pdf_file" class="form-control" 
-                           accept=".pdf" required>
-                    <div class="help-text">Upload your research paper in PDF format. Maximum file size: 10MB</div>
+                    <label class="form-label">PDF File</label>
+                    @if($paper->pdf_path)
+                        <div class="current-file" style="margin-bottom: 10px; padding: 10px; background: #f8f9fa; border-radius: 5px;">
+                            <strong>Current PDF:</strong> 
+                            <a href="{{ asset($paper->pdf_path) }}" target="_blank" style="color: #2d5016; text-decoration: underline;">
+                                View Current PDF
+                            </a>
+                        </div>
+                    @endif
+                    <div class="help-text" style="color: #666666; font-style: italic;">PDF file cannot be updated. If you need to change the PDF, please contact support.</div>
                 </div>
             </div>
 
@@ -79,6 +93,10 @@
                 <p class="section-description">Add all authors who contributed to this research paper.</p>
                 
                 <div id="authors-container">
+                    @php
+                        $authors = $paper->authors->sortBy('id');
+                        $firstAuthor = $authors->first();
+                    @endphp
                     <div class="author-entry" data-author-index="0">
                         <div class="author-header">
                             <h4>Author 1</h4>
@@ -90,7 +108,7 @@
                                 <label class="form-label">Author Name <span class="required">*</span></label>
                                 <input type="text" name="authors[0][name]" class="form-control" 
                                        placeholder="Full name of the author" 
-                                       value="{{ old('authors.0.name', Auth::user()->name) }}" required maxlength="150" readonly>
+                                       value="{{ old('authors.0.name', $firstAuthor->author_name ?? Auth::user()->name) }}" required maxlength="150" readonly>
                                 <div class="help-text">This is automatically set to your name (Author 1)</div>
                             </div>
                             
@@ -98,17 +116,55 @@
                                 <label class="form-label">Email Address</label>
                                 <input type="email" name="authors[0][email]" class="form-control" 
                                        placeholder="author@example.com" 
-                                       value="{{ old('authors.0.email', Auth::user()->email) }}" maxlength="150" readonly>
+                                       value="{{ old('authors.0.email', $firstAuthor->author_email ?? Auth::user()->email) }}" maxlength="150" readonly>
                             </div>
                             
                             <div class="form-group">
                                 <label class="form-label">Affiliation</label>
                                 <input type="text" name="authors[0][affiliation]" class="form-control" 
                                        placeholder="University, Organization, or Company" 
-                                       value="{{ old('authors.0.affiliation', Auth::user()->affiliation) }}" maxlength="255" readonly>
+                                       value="{{ old('authors.0.affiliation', $firstAuthor->affiliation ?? Auth::user()->affiliation) }}" maxlength="255" readonly>
                             </div>
                         </div>
                     </div>
+                    
+                    @php
+                        $additionalAuthors = $authors->skip(1);
+                    @endphp
+                    @foreach($additionalAuthors as $author)
+                        @php
+                            $authorIndex = $loop->index + 1;
+                        @endphp
+                        <div class="author-entry" data-author-index="{{ $authorIndex }}">
+                            <div class="author-header">
+                                <h4>Author {{ $authorIndex + 1 }}</h4>
+                                <button type="button" class="remove-author" onclick="removeAuthor({{ $authorIndex }})">Remove</button>
+                            </div>
+                            
+                            <div class="author-fields">
+                                <div class="form-group">
+                                    <label class="form-label">Author Name <span class="required">*</span></label>
+                                    <input type="text" name="authors[{{ $authorIndex }}][name]" class="form-control" 
+                                           placeholder="Full name of the author" 
+                                           value="{{ old('authors.' . $authorIndex . '.name', $author->author_name) }}" required maxlength="150">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">Email Address</label>
+                                    <input type="email" name="authors[{{ $authorIndex }}][email]" class="form-control" 
+                                           placeholder="author@example.com" 
+                                           value="{{ old('authors.' . $authorIndex . '.email', $author->author_email) }}" maxlength="150">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">Affiliation</label>
+                                    <input type="text" name="authors[{{ $authorIndex }}][affiliation]" class="form-control" 
+                                           placeholder="University, Organization, or Company" 
+                                           value="{{ old('authors.' . $authorIndex . '.affiliation', $author->affiliation) }}" maxlength="255">
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
                 </div>
                 
                 <button type="button" id="add-author" class="btn btn-outline">Add Another Author</button>
@@ -117,7 +173,7 @@
             <!-- Submit Section -->
             <div class="form-actions">
                 <a href="{{ route('dashboard') }}" class="btn btn-outline">Cancel</a>
-                <button type="submit" class="btn btn-primary">Upload Paper</button>
+                <button type="submit" class="btn btn-primary">Update Paper</button>
             </div>
         </form>
     </div>
@@ -130,7 +186,7 @@
 
 @section('scripts')
 <script>
-let authorIndex = 1;
+let authorIndex = {{ $paper->authors->count() }};
 
 document.getElementById('add-author').addEventListener('click', function() {
     const container = document.getElementById('authors-container');
@@ -199,5 +255,9 @@ function updateRemoveButtons() {
         removeButtons.forEach(button => button.style.display = 'none');
     }
 }
+
+// Initialize remove buttons visibility
+updateRemoveButtons();
 </script>
 @endsection
+

@@ -41,20 +41,31 @@
 
             <!-- Authors -->
             <div class="info-card">
-                <h3>Authors</h3>
-                <div class="authors-list">
-                    @foreach($paper->authors as $author)
-                        <div class="author-item">
-                            <div class="author-name">{{ $author->author_name }}</div>
-                            @if($author->author_email)
-                                <div class="author-email">{{ $author->author_email }}</div>
-                            @endif
-                            @if($author->affiliation)
-                                <div class="author-affiliation">{{ $author->affiliation }}</div>
-                            @endif
-                        </div>
-                    @endforeach
-                </div>
+                @php
+                    // Get all authors from paper_authors table for this paper_id
+                    $allAuthors = \App\Models\PaperAuthor::where('paper_id', $paper->id)
+                        ->orderBy('id', 'asc')
+                        ->get();
+                @endphp
+                <h3>Authors ({{ $allAuthors->count() }})</h3>
+                @if($allAuthors->count() > 0)
+                    <div class="authors-list">
+                        @foreach($allAuthors as $index => $author)
+                            <div class="author-item">
+                                <div class="author-number">Author {{ $index + 1 }}</div>
+                                <div class="author-name">{{ $author->author_name }}</div>
+                                @if($author->author_email)
+                                    <div class="author-email">📧 {{ $author->author_email }}</div>
+                                @endif
+                                @if($author->affiliation)
+                                    <div class="author-affiliation">🏢 {{ $author->affiliation }}</div>
+                                @endif
+                            </div>
+                        @endforeach
+                    </div>
+                @else
+                    <p class="no-authors">No authors found for this paper.</p>
+                @endif
             </div>
 
             <!-- Abstract -->

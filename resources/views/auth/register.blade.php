@@ -55,12 +55,15 @@
                 @if(isset($selectedRole))
                     <!-- Role is pre-selected and cannot be changed -->
                     <input type="text" 
+                           id="role_display"
                            class="form-control role-readonly" 
                            value="{{ ucfirst($selectedRole->name) }}" 
-                           readonly>
-                    <input type="hidden" name="role_id" value="{{ $selectedRole->id }}">
-                    <div class="help-text">
-                        You are registering as a {{ ucfirst($selectedRole->name) }}. This cannot be changed.
+                           readonly
+                           style="background-color: #f8f9fa; cursor: not-allowed; opacity: 0.8;"
+                           tabindex="-1">
+                    <input type="hidden" name="role_id" id="role_id" value="{{ $selectedRole->id }}">
+                    <div class="help-text" style="color: #2d5016; font-weight: 600;">
+                        ✓ You are registering as a <strong>{{ ucfirst($selectedRole->name) }}</strong>. This role is locked and cannot be changed.
                     </div>
                 @else
                     <!-- Normal role selection -->
@@ -125,4 +128,36 @@
         </div>
     </div>
 </div>
+
+@if(isset($selectedRole))
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Ensure role cannot be changed
+    const roleInput = document.getElementById('role_display');
+    const roleHidden = document.getElementById('role_id');
+    
+    if (roleInput && roleHidden) {
+        // Prevent any changes to the role field
+        roleInput.addEventListener('input', function(e) {
+            e.preventDefault();
+            this.value = '{{ ucfirst($selectedRole->name) }}';
+        });
+        
+        // Ensure hidden field always has the correct value
+        roleHidden.value = '{{ $selectedRole->id }}';
+        
+        // Prevent form manipulation
+        const form = document.querySelector('.auth-form');
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                // Double-check the role_id before submission
+                if (roleHidden.value !== '{{ $selectedRole->id }}') {
+                    roleHidden.value = '{{ $selectedRole->id }}';
+                }
+            });
+        }
+    }
+});
+</script>
+@endif
 @endsection

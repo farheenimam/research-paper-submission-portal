@@ -21,18 +21,73 @@
                        value="{{ $query }}"
                        placeholder="Search research papers..."
                        autocomplete="off">
+                <!-- Preserve filter values when searching -->
+                @if(!empty($categoryId))
+                    <input type="hidden" name="category" value="{{ $categoryId }}">
+                @endif
+                @if(!empty($year))
+                    <input type="hidden" name="year" value="{{ $year }}">
+                @endif
                 <button type="submit" class="search-btn-recent">SEARCH</button>
             </form>
         </div>
 
+        <!-- Filters Section -->
+        <div class="search-filters-section">
+            <form class="filters-form" action="{{ route('paper.recent') }}" method="GET">
+                <input type="hidden" name="search" value="{{ $query }}">
+                
+                <div class="filters-grid">
+                    <div class="filter-group">
+                        <label for="category" class="filter-label">Category</label>
+                        <select name="category" id="category" class="filter-select">
+                            <option value="">All Categories</option>
+                            @if(isset($categories))
+                                @foreach($categories as $category)
+                                    <option value="{{ $category->id }}" {{ $categoryId == $category->id ? 'selected' : '' }}>
+                                        {{ $category->name }}
+                                    </option>
+                                @endforeach
+                            @endif
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="year" class="filter-label">Publication Year</label>
+                        <select name="year" id="year" class="filter-select">
+                            <option value="">All Years</option>
+                            @if(isset($availableYears))
+                                @foreach($availableYears as $availableYear)
+                                    <option value="{{ $availableYear }}" {{ $year == $availableYear ? 'selected' : '' }}>
+                                        {{ $availableYear }}
+                                    </option>
+                                @endforeach
+                            @endif
+                        </select>
+                    </div>
+
+                    <div class="filter-actions">
+                        <button type="submit" class="btn-filter-apply">Apply Filters</button>
+                        <a href="{{ route('paper.recent') }}{{ !empty($query) ? '?search=' . urlencode($query) : '' }}" class="btn-filter-clear">Clear</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+
         <!-- Results Info -->
-        @if(!empty($query))
+        @if(!empty($query) || !empty($categoryId) || !empty($year))
             <div class="results-info">
                 <p>
                     @if($totalResults > 0)
-                        Found {{ number_format($totalResults) }} result{{ $totalResults != 1 ? 's' : '' }} for "<strong>{{ $query }}</strong>"
+                        Found {{ number_format($totalResults) }} result{{ $totalResults != 1 ? 's' : '' }}
+                        @if(!empty($query))
+                            for "<strong>{{ $query }}</strong>"
+                        @endif
                     @else
-                        No results found for "<strong>{{ $query }}</strong>"
+                        No results found
+                        @if(!empty($query))
+                            for "<strong>{{ $query }}</strong>"
+                        @endif
                     @endif
                 </p>
             </div>
@@ -76,7 +131,11 @@
             <!-- Pagination -->
             @if($papers->hasPages())
                 <div class="pagination-wrapper">
-                    {{ $papers->appends(['search' => $query])->links() }}
+                    {{ $papers->appends([
+                        'search' => $query,
+                        'category' => $categoryId,
+                        'year' => $year
+                    ])->links() }}
                 </div>
             @endif
         @else

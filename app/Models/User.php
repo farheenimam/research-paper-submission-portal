@@ -65,4 +65,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(Paper::class, 'uploaded_by');
     }
+
+    /**
+     * Get the papers saved by the user.
+     */
+    public function savedPapers()
+    {
+        return $this->hasMany(SavedPaper::class);
+    }
 }

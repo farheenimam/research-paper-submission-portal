@@ -32,7 +32,7 @@ class Paper extends Model
      */
     public function authors()
     {
-        return $this->hasMany(PaperAuthor::class);
+        return $this->hasMany(PaperAuthor::class, 'paper_id', 'id');
     }
 
     /**
@@ -49,5 +49,21 @@ class Paper extends Model
     public function approver()
     {
         return $this->belongsTo(User::class, 'approved_by');
+    }
+
+    /**
+     * Get the categories for the paper.
+     */
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class, 'paper_category');
+    }
+
+    /**
+     * Get the users who saved this paper.
+     */
+    public function savedByUsers()
+    {
+        return $this->hasMany(SavedPaper::class);
     }
 }
