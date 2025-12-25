@@ -75,21 +75,22 @@
                                 <label class="form-label">Author Name <span class="required">*</span></label>
                                 <input type="text" name="authors[0][name]" class="form-control" 
                                        placeholder="Full name of the author" 
-                                       value="{{ old('authors.0.name') }}" required maxlength="150">
+                                       value="{{ old('authors.0.name', Auth::user()->name) }}" required maxlength="150" readonly>
+                                <div class="help-text">This is automatically set to your name (Author 1)</div>
                             </div>
                             
                             <div class="form-group">
                                 <label class="form-label">Email Address</label>
                                 <input type="email" name="authors[0][email]" class="form-control" 
                                        placeholder="author@example.com" 
-                                       value="{{ old('authors.0.email') }}" maxlength="150">
+                                       value="{{ old('authors.0.email', Auth::user()->email) }}" maxlength="150" readonly>
                             </div>
                             
                             <div class="form-group">
                                 <label class="form-label">Affiliation</label>
                                 <input type="text" name="authors[0][affiliation]" class="form-control" 
                                        placeholder="University, Organization, or Company" 
-                                       value="{{ old('authors.0.affiliation') }}" maxlength="255">
+                                       value="{{ old('authors.0.affiliation', Auth::user()->affiliation) }}" maxlength="255" readonly>
                             </div>
                         </div>
                     </div>

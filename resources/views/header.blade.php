@@ -18,14 +18,13 @@
 
             <!-- Navigation Menu -->
             <ul class="navbar-nav" id="navbarNav">
-                <li class="nav-item">
-                    <a href="{{ route('welcome') }}" class="nav-link {{ request()->routeIs('welcome') ? 'active' : '' }}">
-                        Home
-                    </a>
-                </li>
-                
                 @guest
                     <!-- Navigation items only for guests (not logged in) -->
+                    <li class="nav-item">
+                        <a href="{{ route('welcome') }}" class="nav-link {{ request()->routeIs('welcome') ? 'active' : '' }}">
+                            Home
+                        </a>
+                    </li>
                     <li class="nav-item">
                         <a href="#services" class="nav-link">
                             Services
@@ -43,32 +42,51 @@
                     </li>
                 @endguest
 
-                <!-- Authentication Section -->
                 @auth
+                    @if(Auth::user()->role_id == 3)
+                        <!-- Articles link for reviewers (role_id 3) -->
+                        <li class="nav-item">
+                            <a href="{{ route('reviewer.articles') }}" class="nav-link {{ request()->routeIs('reviewer.articles') ? 'active' : '' }}">
+                                Articles
+                            </a>
+                        </li>
+                    @else
+                        <!-- Recent research work link for non-reviewers -->
+                        <li class="nav-item">
+                            <a href="{{ route('paper.recent') }}" class="nav-link {{ request()->routeIs('paper.recent') ? 'active' : '' }}">
+                                Recent research work
+                            </a>
+                        </li>
+                    @endif
+
                     <!-- Logged in user profile -->
                     <li class="nav-item user-profile">
                         <button class="profile-toggle" id="profileToggle">
                             <div class="profile-avatar">
-                                {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                                @if(Auth::user()->profile_photo)
+                                    <img src="{{ asset(Auth::user()->profile_photo) }}" alt="Profile" class="profile-img">
+                                @else
+                                    {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                                @endif
                             </div>
                             <span>{{ Auth::user()->name }}</span>
                             <span style="margin-left: 8px;">▼</span>
                         </button>
                         
                         <div class="profile-dropdown" id="profileDropdown">
-                            <a href="{{ route('dashboard') }}" class="dropdown-item">
+                            <a href="{{ route('profile') }}" class="dropdown-item">
                                 👤 My Profile
                             </a>
-                            <a href="{{ route('dashboard') }}" class="dropdown-item">
-                                📄 My Research
-                            </a>
-                            <a href="#" class="dropdown-item">
-                                ✉️ Messages
-                            </a>
+                            @if(Auth::user()->role_id == 3)
+                                <a href="{{ route('reviewer.articles') }}" class="dropdown-item">
+                                    📄 Articles
+                                </a>
+                            @else
+                                <a href="{{ route('dashboard') }}" class="dropdown-item">
+                                    📄 My Research
+                                </a>
+                            @endif
                             <div class="dropdown-divider"></div>
-                            <a href="#" class="dropdown-item">
-                                ⚙️ Settings
-                            </a>
                             <a href="{{ route('logout') }}" class="dropdown-item" 
                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                 🚪 Logout

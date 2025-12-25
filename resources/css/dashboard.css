@@ -172,6 +172,9 @@
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     position: relative;
     transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
 }
 
 .paper-card:hover {
@@ -225,6 +228,8 @@
 
 .paper-abstract {
     margin-bottom: 20px;
+    flex-grow: 1;
+    min-height: 60px;
 }
 
 .paper-abstract p {
@@ -236,13 +241,17 @@
     display: flex;
     gap: 10px;
     flex-wrap: wrap;
+    margin-top: auto;
+    align-items: flex-end;
 }
 
 .paper-actions .btn {
     flex: 1;
     min-width: 120px;
-    padding: 8px 16px;
+    padding: 10px 16px;
     font-size: 14px;
+    text-align: center;
+    white-space: nowrap;
 }
 
 /* Empty State */

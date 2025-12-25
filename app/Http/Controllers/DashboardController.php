@@ -13,6 +13,12 @@ class DashboardController extends Controller
     public function index()
     {
         $user = Auth::user();
+        
+        // Redirect reviewers (role_id 3) to articles page
+        if ($user->role_id == 3) {
+            return redirect()->route('reviewer.articles');
+        }
+        
         $papers = Paper::where('uploaded_by', $user->id)
                       ->with('authors')
                       ->orderBy('created_at', 'desc')
@@ -55,15 +61,33 @@ class DashboardController extends Controller
             'uploaded_by' => Auth::id(),
         ]);
 
-        // Create author records
-        foreach ($request->authors as $authorData) {
-            PaperAuthor::create([
-                'paper_id' => $paper->id,
-                'user_id' => null, // We could match by email later
-                'author_name' => $authorData['name'],
-                'author_email' => $authorData['email'] ?? null,
-                'affiliation' => $authorData['affiliation'] ?? null,
-            ]);
+        // Get the logged-in user
+        $user = Auth::user();
+
+        // Create author 1 - automatically the logged-in user
+        PaperAuthor::create([
+            'paper_id' => $paper->id,
+            'user_id' => $user->id,
+            'author_name' => $user->name,
+            'author_email' => $user->email,
+            'affiliation' => $user->affiliation,
+        ]);
+
+        // Create additional author records (skip index 0 as it's the logged-in user)
+        if (isset($request->authors) && count($request->authors) > 1) {
+            // Start from index 1, skip index 0 (the logged-in user)
+            for ($i = 1; $i < count($request->authors); $i++) {
+                $authorData = $request->authors[$i];
+                if (!empty($authorData['name'])) {
+                    PaperAuthor::create([
+                        'paper_id' => $paper->id,
+                        'user_id' => null, // We could match by email later
+                        'author_name' => $authorData['name'],
+                        'author_email' => $authorData['email'] ?? null,
+                        'affiliation' => $authorData['affiliation'] ?? null,
+                    ]);
+                }
+            }
         }
 
         Session::flash('success', 'Paper uploaded successfully! It is now pending review.');

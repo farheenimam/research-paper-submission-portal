@@ -16,6 +16,7 @@ class Paper extends Model
         'publication_year',
         'status',
         'uploaded_by',
+        'approved_by',
     ];
 
     /**
@@ -32,5 +33,21 @@ class Paper extends Model
     public function authors()
     {
         return $this->hasMany(PaperAuthor::class);
+    }
+
+    /**
+     * Get the comments for the paper.
+     */
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
+
+    /**
+     * Get the user who approved the paper.
+     */
+    public function approver()
+    {
+        return $this->belongsTo(User::class, 'approved_by');
     }
 }

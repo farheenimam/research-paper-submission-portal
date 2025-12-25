@@ -133,6 +133,12 @@ class AuthController extends Controller
             $request->session()->regenerate();
             
             Session::flash('success', 'Welcome back, ' . $user->name . '!');
+            
+            // Redirect reviewers (role_id 3) to articles page, others to welcome
+            if ($user->role_id == 3) {
+                return redirect()->route('reviewer.articles');
+            }
+            
             return redirect()->route('welcome');
         }
         

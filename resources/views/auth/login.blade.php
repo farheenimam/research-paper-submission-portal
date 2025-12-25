@@ -55,7 +55,7 @@
         </form>
 
         <div class="auth-links">
-            <p>Don't have an account? <a href="{{ route('registration') }}">Sign up here</a></p>
+            <p>Don't have an account? <a href="{{ route('welcome') }}#join-us">Sign up here</a></p>
             <p><a href="#" class="forgot-password">Forgot your password?</a></p>
         </div>
     </div>
