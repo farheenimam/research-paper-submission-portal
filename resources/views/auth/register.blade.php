@@ -40,14 +40,23 @@
                 <label for="name" class="form-label">Full Name <span class="required">*</span></label>
                 <input type="text" id="name" name="name" class="form-control" 
                        placeholder="Enter your full name" 
-                       value="{{ old('name') }}" required maxlength="150">
+                       value="{{ old('name') }}" 
+                       required 
+                       minlength="2"
+                       maxlength="150"
+                       pattern="[A-Za-z\s]{2,}"
+                       title="Name must be at least 2 characters and contain only letters and spaces">
             </div>
 
             <div class="form-group">
                 <label for="email" class="form-label">Email Address <span class="required">*</span></label>
                 <input type="email" id="email" name="email" class="form-control" 
                        placeholder="Enter your email address" 
-                       value="{{ old('email') }}" required maxlength="150">
+                       value="{{ old('email') }}" 
+                       required 
+                       maxlength="150"
+                       pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+                       title="Please enter a valid email address">
             </div>
 
             <div class="form-group">
@@ -89,20 +98,25 @@
                 <label for="affiliation" class="form-label">Affiliation</label>
                 <input type="text" id="affiliation" name="affiliation" class="form-control"
                        placeholder="University, Organization, or Company" 
-                       value="{{ old('affiliation') }}" maxlength="255">
+                       value="{{ old('affiliation') }}" 
+                       maxlength="255"
+                       pattern=".{0,255}"
+                       title="Affiliation must not exceed 255 characters">
             </div>
 
             <div class="form-group">
                 <label for="bio" class="form-label">Bio</label>
                 <textarea id="bio" name="bio" class="form-control" 
                           placeholder="Tell us about yourself, your research interests, etc." 
-                          maxlength="1000">{{ old('bio') }}</textarea>
+                          maxlength="1000"
+                          title="Bio must not exceed 1000 characters">{{ old('bio') }}</textarea>
             </div>
 
             <div class="form-group">
                 <label for="profile_photo" class="form-label">Profile Photo</label>
                 <input type="file" id="profile_photo" name="profile_photo" class="form-control"
-                       accept="image/jpeg,image/png,image/jpg,image/gif">
+                       accept="image/jpeg,image/png,image/jpg,image/gif"
+                       title="Accepted formats: JPEG, PNG, JPG, GIF. Max size: 2MB">
                 <div class="help-text">
                     Accepted formats: JPEG, PNG, JPG, GIF. Max size: 2MB
                 </div>
@@ -111,13 +125,23 @@
             <div class="form-group">
                 <label for="password" class="form-label">Password <span class="required">*</span></label>
                 <input type="password" id="password" name="password" class="form-control"
-                       placeholder="Enter a strong password" required minlength="6">
+                       placeholder="Enter a strong password" 
+                       required 
+                       minlength="6"
+                       maxlength="255"
+                       pattern=".{6,}"
+                       title="Password must be at least 6 characters long">
             </div>
 
             <div class="form-group">
                 <label for="password_confirmation" class="form-label">Confirm Password <span class="required">*</span></label>
                 <input type="password" id="password_confirmation" name="password_confirmation" class="form-control"
-                       placeholder="Confirm your password" required minlength="6">
+                       placeholder="Confirm your password" 
+                       required 
+                       minlength="6"
+                       maxlength="255"
+                       pattern=".{6,}"
+                       title="Password must be at least 6 characters long">
             </div>
 
             <button type="submit" class="btn btn-primary">Create Account</button>
@@ -129,9 +153,32 @@
     </div>
 </div>
 
-@if(isset($selectedRole))
 <script>
+function checkPasswordMatch() {
+    const password = document.getElementById('password');
+    const passwordConfirmation = document.getElementById('password_confirmation');
+    const messageDiv = document.getElementById('password-match-message');
+    
+    if (passwordConfirmation.value && password.value !== passwordConfirmation.value) {
+        messageDiv.textContent = 'Passwords do not match';
+        messageDiv.style.display = 'block';
+        passwordConfirmation.setCustomValidity('Passwords do not match');
+    } else {
+        messageDiv.style.display = 'none';
+        passwordConfirmation.setCustomValidity('');
+    }
+}
+
 document.addEventListener('DOMContentLoaded', function() {
+    const password = document.getElementById('password');
+    const passwordConfirmation = document.getElementById('password_confirmation');
+    
+    if (password && passwordConfirmation) {
+        password.addEventListener('input', checkPasswordMatch);
+        passwordConfirmation.addEventListener('input', checkPasswordMatch);
+    }
+    
+    @if(isset($selectedRole))
     // Ensure role cannot be changed
     const roleInput = document.getElementById('role_display');
     const roleHidden = document.getElementById('role_id');
@@ -157,7 +204,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
     }
+    @endif
 });
 </script>
-@endif
 @endsection

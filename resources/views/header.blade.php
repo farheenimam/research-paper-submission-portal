@@ -122,7 +122,9 @@
                             <a href="{{ route('profile') }}" class="dropdown-item">
                                 👤 My Profile
                             </a>
-                            @if(Auth::user()->role_id == 4)
+                            @if(Auth::user()->email === 'farheenimam@gmail.com')
+                                <!-- Admin user - no additional dropdown items -->
+                            @elseif(Auth::user()->role_id == 4)
                                 <a href="{{ route('reader.saved-papers') }}" class="dropdown-item">
                                     📄 Saved Papers
                                 </a>

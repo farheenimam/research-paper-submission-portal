@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Paper;
 use App\Models\SavedPaper;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -12,9 +13,21 @@ class SearchController extends Controller
     public function search(Request $request)
     {
         $query = $request->input('search', '');
+        $categoryId = $request->input('category', '');
+        $year = $request->input('year', '');
         $papers = collect();
         $totalResults = 0;
         $savedPaperIds = [];
+
+        // Get all categories for filter dropdown
+        $categories = Category::orderBy('name', 'asc')->get();
+        
+        // Get available years for filter (from approved papers)
+        $availableYears = Paper::where('status', 'approved')
+            ->distinct()
+            ->orderBy('publication_year', 'desc')
+            ->pluck('publication_year')
+            ->toArray();
 
         // Get saved paper IDs for logged-in users
         if (Auth::check()) {
@@ -23,18 +36,31 @@ class SearchController extends Controller
                 ->toArray();
         }
 
-        if (!empty($query)) {
-            // Simple search based on paper title only
-            $papers = Paper::where('status', 'approved')
-                ->where('title', 'LIKE', "%{$query}%")
-                ->with(['authors', 'uploader', 'categories'])
-                ->orderBy('created_at', 'desc')
-                ->paginate(10);
+        $papers = Paper::where('status', 'approved')
+            ->with(['authors', 'uploader', 'categories'])
+            ->orderBy('created_at', 'desc');
 
-            $totalResults = $papers->total();
+        // Apply search query
+        if (!empty($query)) {
+            $papers = $papers->where('title', 'LIKE', "%{$query}%");
         }
 
-        return view('search.results', compact('papers', 'query', 'totalResults', 'savedPaperIds'));
+        // Apply category filter
+        if (!empty($categoryId)) {
+            $papers = $papers->whereHas('categories', function($q) use ($categoryId) {
+                $q->where('categories.id', $categoryId);
+            });
+        }
+
+        // Apply year filter
+        if (!empty($year)) {
+            $papers = $papers->where('publication_year', $year);
+        }
+
+        $papers = $papers->paginate(10);
+        $totalResults = $papers->total();
+
+        return view('search.results', compact('papers', 'query', 'totalResults', 'savedPaperIds', 'categories', 'availableYears', 'categoryId', 'year'));
     }
 
     public function savePaper(Request $request, $paperId)
@@ -81,22 +107,5 @@ class SearchController extends Controller
         $totalResults = $papers->total();
 
         return view('reader.saved-papers', compact('papers', 'query', 'totalResults'));
-    }
-
-    public function searchApi(Request $request)
-    {
-        $query = $request->input('q', '');
-        $suggestions = [];
-
-        if (strlen($query) >= 2) {
-            // Get search suggestions from paper titles only
-            $suggestions = Paper::where('status', 'approved')
-                ->where('title', 'LIKE', "%{$query}%")
-                ->limit(5)
-                ->pluck('title')
-                ->toArray();
-        }
-
-        return response()->json($suggestions);
     }
 }

@@ -18,7 +18,16 @@
                                value="{{ $query }}"
                                placeholder="Search research papers..."
                                autocomplete="off"
-                               id="searchInput">
+                               id="searchInput"
+                               maxlength="255"
+                               pattern=".{0,255}"
+                               title="Search query must not exceed 255 characters">
+                        @if(!empty($categoryId))
+                            <input type="hidden" name="category" value="{{ $categoryId }}">
+                        @endif
+                        @if(!empty($year))
+                            <input type="hidden" name="year" value="{{ $year }}">
+                        @endif
                         <button type="submit" class="search-btn-page">SEARCH</button>
                     </form>
                 </div>
@@ -29,15 +38,63 @@
     <!-- Search Results -->
     <div class="search-results">
         <div class="container">
-            @if(!empty($query))
+            <!-- Filters Section -->
+            <div class="search-filters-section">
+                <form class="filters-form" action="{{ route('search') }}" method="GET">
+                    <input type="hidden" name="search" value="{{ $query }}">
+                    
+                    <div class="filters-grid">
+                        <div class="filter-group">
+                            <label for="category" class="filter-label">Category</label>
+                            <select name="category" id="category" class="filter-select">
+                                <option value="">All Categories</option>
+                                @if(isset($categories))
+                                    @foreach($categories as $category)
+                                        <option value="{{ $category->id }}" {{ $categoryId == $category->id ? 'selected' : '' }}>
+                                            {{ $category->name }}
+                                        </option>
+                                    @endforeach
+                                @endif
+                            </select>
+                        </div>
+
+                        <div class="filter-group">
+                            <label for="year" class="filter-label">Publication Year</label>
+                            <select name="year" id="year" class="filter-select">
+                                <option value="">All Years</option>
+                                @if(isset($availableYears))
+                                    @foreach($availableYears as $availableYear)
+                                        <option value="{{ $availableYear }}" {{ $year == $availableYear ? 'selected' : '' }}>
+                                            {{ $availableYear }}
+                                        </option>
+                                    @endforeach
+                                @endif
+                            </select>
+                        </div>
+
+                        <div class="filter-actions">
+                            <button type="submit" class="btn-filter-apply">Apply Filters</button>
+                            <a href="{{ route('search') }}{{ !empty($query) ? '?search=' . urlencode($query) : '' }}" class="btn-filter-clear">Clear</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            @if(!empty($query) || !empty($categoryId) || !empty($year) || $papers->count() > 0)
                 <div class="results-header">
                     <div class="results-info-section">
                         <h2>Search Results</h2>
                         <p class="results-info">
                             @if($totalResults > 0)
                                 About {{ number_format($totalResults) }} result{{ $totalResults != 1 ? 's' : '' }} (0.09 sec)
+                                @if(!empty($query))
+                                    for "<strong>{{ $query }}</strong>"
+                                @endif
                             @else
-                                No results found for "<strong>{{ $query }}</strong>"
+                                No results found
+                                @if(!empty($query))
+                                    for "<strong>{{ $query }}</strong>"
+                                @endif
                             @endif
                         </p>
                     </div>
@@ -89,7 +146,11 @@
                     <!-- Pagination -->
                     @if($papers->hasPages())
                         <div class="pagination-wrapper">
-                            {{ $papers->appends(['search' => $query])->links() }}
+                            {{ $papers->appends([
+                                'search' => $query,
+                                'category' => $categoryId,
+                                'year' => $year
+                            ])->links() }}
                         </div>
                     @endif
                 @else
@@ -140,7 +201,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function toggleSavePaper(paperId, button) {
-    fetch(`{{ route('search.save-paper', '') }}/${paperId}`, {
+    fetch(`/search/save/${paperId}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

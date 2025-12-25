@@ -92,12 +92,8 @@ class ReviewerController extends Controller
         // Update paper status
         $paper->status = $request->status;
         
-        // If approved, set approved_by
-        if ($request->status === 'approved') {
-            $paper->approved_by = $user->id;
-        } else {
-            $paper->approved_by = null;
-        }
+        // Set approved_by to reviewer ID for all status changes (approved, rejected, pending)
+        $paper->approved_by = $user->id;
         
         $paper->save();
 

@@ -49,7 +49,10 @@
                         <input type="hidden" name="bio" value="{{ $user->bio }}">
                         
                         <div class="file-input-wrapper">
-                            <input type="file" name="profile_photo" id="profile_photo" accept="image/*" class="file-input">
+                            <input type="file" name="profile_photo" id="profile_photo" 
+                                   accept="image/jpeg,image/png,image/jpg,image/gif" 
+                                   class="file-input"
+                                   title="Accepted formats: JPEG, PNG, JPG, GIF. Max size: 2MB">
                             <label for="profile_photo" class="btn btn-outline">Choose Photo</label>
                         </div>
                         <button type="submit" class="btn btn-primary" id="upload-btn" style="display: none;">Upload</button>
@@ -73,22 +76,41 @@
                     
                     <div class="form-group">
                         <label for="name">Full Name</label>
-                        <input type="text" id="name" name="name" value="{{ old('name', $user->name) }}" required>
+                        <input type="text" id="name" name="name" 
+                               value="{{ old('name', $user->name) }}" 
+                               required 
+                               minlength="2"
+                               maxlength="150"
+                               pattern="[A-Za-z\s]{2,}"
+                               title="Name must be at least 2 characters and contain only letters and spaces">
                     </div>
 
                     <div class="form-group">
                         <label for="email">Email Address</label>
-                        <input type="email" id="email" name="email" value="{{ old('email', $user->email) }}" required>
+                        <input type="email" id="email" name="email" 
+                               value="{{ old('email', $user->email) }}" 
+                               required 
+                               maxlength="150"
+                               pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+                               title="Please enter a valid email address">
                     </div>
 
                     <div class="form-group">
                         <label for="affiliation">Affiliation</label>
-                        <input type="text" id="affiliation" name="affiliation" value="{{ old('affiliation', $user->affiliation) }}" placeholder="University, Institution, or Organization">
+                        <input type="text" id="affiliation" name="affiliation" 
+                               value="{{ old('affiliation', $user->affiliation) }}" 
+                               placeholder="University, Institution, or Organization"
+                               maxlength="255"
+                               pattern=".{0,255}"
+                               title="Affiliation must not exceed 255 characters">
                     </div>
 
                     <div class="form-group">
                         <label for="bio">Bio</label>
-                        <textarea id="bio" name="bio" rows="4" placeholder="Tell us about yourself, your research interests, and expertise...">{{ old('bio', $user->bio) }}</textarea>
+                        <textarea id="bio" name="bio" rows="4" 
+                                  placeholder="Tell us about yourself, your research interests, and expertise..."
+                                  maxlength="1000"
+                                  title="Bio must not exceed 1000 characters">{{ old('bio', $user->bio) }}</textarea>
                     </div>
 
                     <div class="form-actions">

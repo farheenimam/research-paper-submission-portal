@@ -32,6 +32,22 @@
             </div>
         </div>
 
+        <!-- PDF Preview Section -->
+        <div class="pdf-preview-section">
+            <div class="pdf-preview-header">
+                <h2>Paper Preview</h2>
+                <a href="{{ asset($paper->pdf_path) }}" download class="download-btn-small" title="Download PDF">
+                    <span>⬇</span>
+                </a>
+            </div>
+            <div class="pdf-preview-container">
+                <iframe src="{{ asset($paper->pdf_path) }}#toolbar=0" class="pdf-iframe" frameborder="0" allowfullscreen></iframe>
+                <div class="pdf-fallback">
+                    <p>If the PDF doesn't display, <a href="{{ asset($paper->pdf_path) }}" target="_blank">click here to open it in a new tab</a></p>
+                </div>
+            </div>
+        </div>
+
         <div class="paper-content-public">
             <!-- Authors Section -->
             <div class="paper-section">
@@ -58,17 +74,6 @@
                 <h3>Abstract</h3>
                 <div class="abstract-content">
                     <p>{{ $paper->abstract }}</p>
-                </div>
-            </div>
-
-            <!-- Download Section -->
-            <div class="paper-section">
-                <h3>Download</h3>
-                <div class="download-section">
-                    <a href="{{ asset($paper->pdf_path) }}" target="_blank" class="btn btn-primary btn-large">
-                        📄 Download PDF
-                    </a>
-                    <p class="download-info">Click to download the full research paper in PDF format</p>
                 </div>
             </div>
 

@@ -6,8 +6,6 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Str;
-use Laravel\Socialite\Facades\Socialite;
 
 class AuthController extends Controller
 {
@@ -46,10 +44,6 @@ class AuthController extends Controller
         }
         
         return view('auth.register', compact('roles', 'defaultRole', 'selectedRole'));
-    }
-
-    function adminView(){
-        return view('Admin.admin_home');
     }
 
     function registrationPost(Request $request){
@@ -121,24 +115,6 @@ class AuthController extends Controller
 
         $credentials = $request->only('email', 'password');
 
-        // Predefined admin credentials
-        $adminCredentials = [
-            'email' => 'admin@gmail.com',
-            'password' => 'admin.123'
-        ];
-
-        // Check for admin credentials
-        if ($request->email === $adminCredentials['email'] && $request->password === $adminCredentials['password']) {
-            Auth::loginUsingId(1); // Assuming the admin user ID is 1
-            
-            // Set admin session data
-            Session::put('user_role', 'admin');
-            Session::put('user_name', 'Administrator');
-            Session::flash('success', 'Welcome back, Administrator!');
-            
-            return redirect()->route('admin.home');
-        }
-
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
             
@@ -194,31 +170,4 @@ class AuthController extends Controller
         Session::flash('success', 'Goodbye ' . $userName . '! You have been logged out successfully.');
         return redirect(route('login'));
     }
-
-    /**
-     * Check if user is logged in via session
-     */
-    public function checkSession()
-    {
-        if (!Session::has('user_id') && !Auth::check()) {
-            return redirect(route('login'))->with('error', 'Please login to continue.');
-        }
-        return true;
-    }
-
-    /**
-     * Get current user session data
-     */
-    public function getSessionData()
-    {
-        return [
-            'user_id' => Session::get('user_id'),
-            'user_name' => Session::get('user_name'),
-            'user_email' => Session::get('user_email'),
-            'user_role_id' => Session::get('user_role_id'),
-            'login_time' => Session::get('login_time'),
-        ];
-    }
-
-
 }

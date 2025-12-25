@@ -40,13 +40,20 @@
                 <label for="email" class="form-label">Email Address <span class="required">*</span></label>
                 <input type="email" id="email" name="email" class="form-control" 
                        placeholder="Enter your email address" 
-                       value="{{ old('email') }}" required>
+                       value="{{ old('email') }}" 
+                       required 
+                       maxlength="150"
+                       pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+                       title="Please enter a valid email address">
             </div>
 
             <div class="form-group">
                 <label for="password" class="form-label">Password <span class="required">*</span></label>
                 <input type="password" id="password" name="password" class="form-control"
-                       placeholder="Enter your password" required>
+                       placeholder="Enter your password" 
+                       required 
+                       minlength="1"
+                       title="Password is required">
             </div>
 
         
@@ -56,7 +63,6 @@
 
         <div class="auth-links">
             <p>Don't have an account? <a href="{{ route('welcome') }}#join-us">Sign up here</a></p>
-            <p><a href="#" class="forgot-password">Forgot your password?</a></p>
         </div>
     </div>
 </div>

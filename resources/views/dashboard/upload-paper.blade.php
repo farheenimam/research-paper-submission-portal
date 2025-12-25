@@ -32,22 +32,33 @@
                     <label for="title" class="form-label">Paper Title <span class="required">*</span></label>
                     <input type="text" id="title" name="title" class="form-control" 
                            placeholder="Enter the title of your research paper" 
-                           value="{{ old('title') }}" required maxlength="255">
+                           value="{{ old('title') }}" 
+                           required 
+                           minlength="5"
+                           maxlength="255"
+                           pattern=".{5,255}"
+                           title="Title must be between 5 and 255 characters">
                 </div>
 
                 <div class="form-group">
                     <label for="abstract" class="form-label">Abstract <span class="required">*</span></label>
                     <textarea id="abstract" name="abstract" class="form-control abstract-field" 
                               placeholder="Provide a comprehensive abstract of your research paper" 
-                              required>{{ old('abstract') }}</textarea>
+                              required
+                              minlength="50"
+                              title="Abstract must be at least 50 characters long">{{ old('abstract') }}</textarea>
                     <div class="help-text">Provide a detailed summary of your research, methodology, and findings.</div>
                 </div>
 
                 <div class="form-group">
                     <label for="publication_year" class="form-label">Publication Year <span class="required">*</span></label>
                     <input type="number" id="publication_year" name="publication_year" class="form-control" 
-                           min="1900" max="{{ date('Y') + 1 }}" 
-                           value="{{ old('publication_year', date('Y')) }}" required>
+                           min="1900" 
+                           max="{{ date('Y') + 1 }}" 
+                           value="{{ old('publication_year', date('Y')) }}" 
+                           required
+                           step="1"
+                           title="Publication year must be between 1900 and {{ date('Y') + 1 }}">
                 </div>
 
                 <div class="form-group">
@@ -68,7 +79,9 @@
                 <div class="form-group">
                     <label for="pdf_file" class="form-label">PDF File <span class="required">*</span></label>
                     <input type="file" id="pdf_file" name="pdf_file" class="form-control" 
-                           accept=".pdf" required>
+                           accept=".pdf,application/pdf" 
+                           required
+                           title="Please upload a PDF file (max 10MB)">
                     <div class="help-text">Upload your research paper in PDF format. Maximum file size: 10MB</div>
                 </div>
             </div>
@@ -98,14 +111,22 @@
                                 <label class="form-label">Email Address</label>
                                 <input type="email" name="authors[0][email]" class="form-control" 
                                        placeholder="author@example.com" 
-                                       value="{{ old('authors.0.email', Auth::user()->email) }}" maxlength="150" readonly>
+                                       value="{{ old('authors.0.email', Auth::user()->email) }}" 
+                                       maxlength="150" 
+                                       readonly
+                                       pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+                                       title="Please enter a valid email address">
                             </div>
                             
                             <div class="form-group">
                                 <label class="form-label">Affiliation</label>
                                 <input type="text" name="authors[0][affiliation]" class="form-control" 
                                        placeholder="University, Organization, or Company" 
-                                       value="{{ old('authors.0.affiliation', Auth::user()->affiliation) }}" maxlength="255" readonly>
+                                       value="{{ old('authors.0.affiliation', Auth::user()->affiliation) }}" 
+                                       maxlength="255" 
+                                       readonly
+                                       pattern=".{0,255}"
+                                       title="Affiliation must not exceed 255 characters">
                             </div>
                         </div>
                     </div>
@@ -148,19 +169,30 @@ document.getElementById('add-author').addEventListener('click', function() {
             <div class="form-group">
                 <label class="form-label">Author Name <span class="required">*</span></label>
                 <input type="text" name="authors[${authorIndex}][name]" class="form-control" 
-                       placeholder="Full name of the author" required maxlength="150">
+                       placeholder="Full name of the author" 
+                       required 
+                       minlength="2"
+                       maxlength="150"
+                       pattern="[A-Za-z\s]{2,}"
+                       title="Author name must be at least 2 characters and contain only letters and spaces">
             </div>
             
             <div class="form-group">
                 <label class="form-label">Email Address</label>
                 <input type="email" name="authors[${authorIndex}][email]" class="form-control" 
-                       placeholder="author@example.com" maxlength="150">
+                       placeholder="author@example.com" 
+                       maxlength="150"
+                       pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+                       title="Please enter a valid email address">
             </div>
             
             <div class="form-group">
                 <label class="form-label">Affiliation</label>
                 <input type="text" name="authors[${authorIndex}][affiliation]" class="form-control" 
-                       placeholder="University, Organization, or Company" maxlength="255">
+                       placeholder="University, Organization, or Company" 
+                       maxlength="255"
+                       pattern=".{0,255}"
+                       title="Affiliation must not exceed 255 characters">
             </div>
         </div>
     `;

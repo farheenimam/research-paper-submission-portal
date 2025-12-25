@@ -21,7 +21,10 @@
                            name="search"
                            value="{{ $query }}"
                            placeholder="Search reviewed papers..."
-                           autocomplete="off">
+                           autocomplete="off"
+                           maxlength="255"
+                           pattern=".{0,255}"
+                           title="Search query must not exceed 255 characters">
                     <button type="submit" class="search-btn-articles">SEARCH</button>
                 </div>
                 

@@ -18,7 +18,10 @@
                                value="{{ $query }}"
                                placeholder="Search saved papers..."
                                autocomplete="off"
-                               id="searchInput">
+                               id="searchInput"
+                               maxlength="255"
+                               pattern=".{0,255}"
+                               title="Search query must not exceed 255 characters">
                         <button type="submit" class="search-btn-page">SEARCH</button>
                     </form>
                 </div>
@@ -127,7 +130,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function toggleSavePaper(paperId, button) {
-    fetch(`{{ route('search.save-paper', '') }}/${paperId}`, {
+    fetch(`/search/save/${paperId}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

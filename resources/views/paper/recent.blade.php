@@ -20,7 +20,10 @@
                        name="search"
                        value="{{ $query }}"
                        placeholder="Search research papers..."
-                       autocomplete="off">
+                       autocomplete="off"
+                       maxlength="255"
+                       pattern=".{0,255}"
+                       title="Search query must not exceed 255 characters">
                 <!-- Preserve filter values when searching -->
                 @if(!empty($categoryId))
                     <input type="hidden" name="category" value="{{ $categoryId }}">

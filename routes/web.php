@@ -37,7 +37,6 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Search routes
 Route::get('/search', [SearchController::class, 'search'])->name('search');
-Route::get('/api/search-suggestions', [SearchController::class, 'searchApi'])->name('search.api');
 Route::post('/search/save/{id}', [SearchController::class, 'savePaper'])->name('search.save-paper');
 
 // Public paper view

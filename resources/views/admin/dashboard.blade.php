@@ -31,19 +31,34 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label>Name *</label>
-                            <input type="text" name="name" class="form-control" required>
+                            <input type="text" name="name" class="form-control" 
+                                   required 
+                                   minlength="2"
+                                   maxlength="150"
+                                   pattern="[A-Za-z\s]{2,}"
+                                   title="Name must be at least 2 characters and contain only letters and spaces">
                         </div>
                         <div class="form-group">
                             <label>Email *</label>
-                            <input type="email" name="email" class="form-control" required>
+                            <input type="email" name="email" class="form-control" 
+                                   required 
+                                   maxlength="150"
+                                   pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+                                   title="Please enter a valid email address">
                         </div>
                         <div class="form-group">
                             <label>Password *</label>
-                            <input type="password" name="password" class="form-control" required>
+                            <input type="password" name="password" class="form-control" 
+                                   required 
+                                   minlength="6"
+                                   maxlength="255"
+                                   pattern=".{6,}"
+                                   title="Password must be at least 6 characters long">
                         </div>
                         <div class="form-group">
                             <label>Role *</label>
                             <select name="role_id" class="form-control" required>
+                                <option value="">Select Role</option>
                                 @foreach(\App\Models\Role::all() as $role)
                                     <option value="{{ $role->id }}">{{ ucfirst($role->name) }}</option>
                                 @endforeach
@@ -51,7 +66,10 @@
                         </div>
                         <div class="form-group">
                             <label>Affiliation</label>
-                            <input type="text" name="affiliation" class="form-control">
+                            <input type="text" name="affiliation" class="form-control"
+                                   maxlength="255"
+                                   pattern=".{0,255}"
+                                   title="Affiliation must not exceed 255 characters">
                         </div>
                         <div class="form-group">
                             <button type="submit" class="btn btn-primary">Add</button>
@@ -111,17 +129,29 @@
                     <div class="form-row">
                         <div class="form-group" style="grid-column: 1 / -1;">
                             <label>Title *</label>
-                            <input type="text" name="title" class="form-control" required>
+                            <input type="text" name="title" class="form-control" 
+                                   required 
+                                   minlength="5"
+                                   maxlength="255"
+                                   pattern=".{5,255}"
+                                   title="Title must be between 5 and 255 characters">
                         </div>
                         <div class="form-group" style="grid-column: 1 / -1;">
                             <label>Abstract *</label>
-                            <textarea name="abstract" class="form-control" rows="4" required></textarea>
+                            <textarea name="abstract" class="form-control" rows="4" 
+                                      required
+                                      minlength="50"
+                                      title="Abstract must be at least 50 characters long"></textarea>
                         </div>
                         <div class="form-group">
                             <label>Publication Year *</label>
                             <input type="number" name="publication_year" class="form-control" 
-                                   min="1900" max="{{ date('Y') + 1 }}" 
-                                   value="{{ date('Y') }}" required>
+                                   min="1900" 
+                                   max="{{ date('Y') + 1 }}" 
+                                   value="{{ date('Y') }}" 
+                                   required
+                                   step="1"
+                                   title="Publication year must be between 1900 and {{ date('Y') + 1 }}">
                         </div>
                         <div class="form-group">
                             <label>Category *</label>
@@ -144,6 +174,7 @@
                         <div class="form-group">
                             <label>Status *</label>
                             <select name="status" class="form-control" required>
+                                <option value="">Select Status</option>
                                 <option value="pending">Pending</option>
                                 <option value="approved">Approved</option>
                                 <option value="rejected">Rejected</option>
@@ -151,19 +182,33 @@
                         </div>
                         <div class="form-group" style="grid-column: 1 / -1;">
                             <label>PDF File *</label>
-                            <input type="file" name="pdf_file" class="form-control" accept=".pdf" required>
+                            <input type="file" name="pdf_file" class="form-control" 
+                                   accept=".pdf,application/pdf" 
+                                   required
+                                   title="Please upload a PDF file (max 10MB)">
                         </div>
                         <div class="form-group">
                             <label>Author Name *</label>
-                            <input type="text" name="author_name" class="form-control" required>
+                            <input type="text" name="author_name" class="form-control" 
+                                   required 
+                                   minlength="2"
+                                   maxlength="150"
+                                   pattern="[A-Za-z\s]{2,}"
+                                   title="Author name must be at least 2 characters and contain only letters and spaces">
                         </div>
                         <div class="form-group">
                             <label>Author Email</label>
-                            <input type="email" name="author_email" class="form-control">
+                            <input type="email" name="author_email" class="form-control"
+                                   maxlength="150"
+                                   pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+                                   title="Please enter a valid email address">
                         </div>
                         <div class="form-group">
                             <label>Author Affiliation</label>
-                            <input type="text" name="author_affiliation" class="form-control">
+                            <input type="text" name="author_affiliation" class="form-control"
+                                   maxlength="255"
+                                   pattern=".{0,255}"
+                                   title="Affiliation must not exceed 255 characters">
                         </div>
                         <div class="form-group" style="grid-column: 1 / -1;">
                             <button type="submit" class="btn btn-primary">Add</button>
@@ -233,15 +278,26 @@
                         </div>
                         <div class="form-group">
                             <label>Author Name *</label>
-                            <input type="text" name="author_name" class="form-control" required>
+                            <input type="text" name="author_name" class="form-control" 
+                                   required 
+                                   minlength="2"
+                                   maxlength="150"
+                                   pattern="[A-Za-z\s]{2,}"
+                                   title="Author name must be at least 2 characters and contain only letters and spaces">
                         </div>
                         <div class="form-group">
                             <label>Email</label>
-                            <input type="email" name="author_email" class="form-control">
+                            <input type="email" name="author_email" class="form-control"
+                                   maxlength="150"
+                                   pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+                                   title="Please enter a valid email address">
                         </div>
                         <div class="form-group">
                             <label>Affiliation</label>
-                            <input type="text" name="affiliation" class="form-control">
+                            <input type="text" name="affiliation" class="form-control"
+                                   maxlength="255"
+                                   pattern=".{0,255}"
+                                   title="Affiliation must not exceed 255 characters">
                         </div>
                         <div class="form-group">
                             <button type="submit" class="btn btn-primary">Add</button>
@@ -299,7 +355,12 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label>Category Name *</label>
-                            <input type="text" name="name" class="form-control" required>
+                            <input type="text" name="name" class="form-control" 
+                                   required 
+                                   minlength="2"
+                                   maxlength="100"
+                                   pattern="[A-Za-z0-9\s]{2,}"
+                                   title="Category name must be at least 2 characters and contain only letters, numbers, and spaces">
                         </div>
                         <div class="form-group">
                             <button type="submit" class="btn btn-primary">Add</button>

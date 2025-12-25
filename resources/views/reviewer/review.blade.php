@@ -75,13 +75,21 @@
                     <p>{{ $paper->abstract }}</p>
                 </div>
             </div>
+        </div>
 
-            <!-- Download -->
-            <div class="info-card">
-                <h3>Paper Document</h3>
-                <a href="{{ asset($paper->pdf_path) }}" target="_blank" class="btn btn-primary">
-                    📄 Download PDF
+        <!-- PDF Preview Section -->
+        <div class="pdf-preview-section">
+            <div class="pdf-preview-header">
+                <h2>Paper Preview</h2>
+                <a href="{{ asset($paper->pdf_path) }}" download class="download-btn-small" title="Download PDF">
+                    <span>⬇</span>
                 </a>
+            </div>
+            <div class="pdf-preview-container">
+                <iframe src="{{ asset($paper->pdf_path) }}#toolbar=0" class="pdf-iframe" frameborder="0" allowfullscreen></iframe>
+                <div class="pdf-fallback">
+                    <p>If the PDF doesn't display, <a href="{{ asset($paper->pdf_path) }}" target="_blank">click here to open it in a new tab</a></p>
+                </div>
             </div>
         </div>
 
@@ -123,7 +131,9 @@
                 <div class="form-group">
                     <label for="comment" class="form-label">Add Comment</label>
                     <textarea name="comment" id="comment" class="form-control" rows="6" 
-                              placeholder="Enter your review comments, feedback, or suggestions for the author..."></textarea>
+                              placeholder="Enter your review comments, feedback, or suggestions for the author..."
+                              maxlength="5000"
+                              title="Comment must not exceed 5000 characters"></textarea>
                     <div class="help-text">Your comment will be saved with this review</div>
                 </div>
 
