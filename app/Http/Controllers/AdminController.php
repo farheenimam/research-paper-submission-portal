@@ -29,58 +29,6 @@ class AdminController extends Controller
     }
 
     // User Management
-    public function showUser($id)
-    {
-        if (Auth::check() && Auth::user()->email !== 'farheenimam@gmail.com') {
-            abort(403, 'Unauthorized access');
-        }
-
-        $user = User::with('role')->findOrFail($id);
-        
-        // Get user's uploaded papers (if researcher)
-        $uploadedPapers = Paper::where('uploaded_by', $user->id)
-            ->with(['categories', 'comments.user'])
-            ->orderBy('created_at', 'desc')
-            ->get();
-        
-        // Get user's comments (if reviewer)
-        $comments = Comment::where('user_id', $user->id)
-            ->with(['paper.uploader', 'paper.categories'])
-            ->orderBy('created_at', 'desc')
-            ->get();
-        
-        // Get papers approved by this user (if reviewer)
-        $approvedPapers = Paper::where('approved_by', $user->id)
-            ->with(['uploader', 'categories'])
-            ->orderBy('updated_at', 'desc')
-            ->get();
-        
-        // Get papers where user is an author
-        $authoredPapers = PaperAuthor::where('user_id', $user->id)
-            ->with(['paper.uploader', 'paper.categories'])
-            ->orderBy('id', 'desc')
-            ->get();
-        
-        // Get feedbacks/comments on user's papers (if researcher)
-        $feedbacks = [];
-        foreach ($uploadedPapers as $paper) {
-            foreach ($paper->comments as $comment) {
-                $feedbacks[] = [
-                    'paper' => $paper,
-                    'comment' => $comment,
-                    'reviewer' => $comment->user,
-                ];
-            }
-        }
-        
-        // Sort feedbacks by date
-        usort($feedbacks, function($a, $b) {
-            return strtotime($b['comment']->created_at) - strtotime($a['comment']->created_at);
-        });
-
-        return view('admin.user-info', compact('user', 'uploadedPapers', 'comments', 'approvedPapers', 'authoredPapers', 'feedbacks'));
-    }
-
     public function deleteUser($id)
     {
         if (Auth::check() && Auth::user()->email !== 'farheenimam@gmail.com') {

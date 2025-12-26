@@ -152,7 +152,7 @@
                         @foreach($users as $user)
                             <tr>
                                 <td>{{ $user->id }}</td>
-                                <td><a href="{{ route('admin.show-user', $user->id) }}" style="color: #2d5016; text-decoration: none; font-weight: 600;">{{ $user->name }}</a></td>
+                                <td>{{ $user->name }}</td>
                                 <td>{{ $user->email }}</td>
                                 <td>{{ ucfirst($user->role->name ?? 'N/A') }}</td>
                                 <td>{{ $user->affiliation ?? 'N/A' }}</td>

@@ -68,7 +68,6 @@ Route::middleware('auth')->group(function () {
     
     // Admin routes
     Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
-    Route::get('/admin/users/{id}', [AdminController::class, 'showUser'])->name('admin.show-user');
     Route::post('/admin/users', [AdminController::class, 'storeUser'])->name('admin.store-user');
     Route::put('/admin/users/{id}', [AdminController::class, 'updateUser'])->name('admin.update-user');
     Route::delete('/admin/users/{id}', [AdminController::class, 'deleteUser'])->name('admin.delete-user');
