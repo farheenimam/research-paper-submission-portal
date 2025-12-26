@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Paper;
 use App\Models\PaperAuthor;
 use App\Models\Category;
+use App\Models\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -28,6 +29,58 @@ class AdminController extends Controller
     }
 
     // User Management
+    public function showUser($id)
+    {
+        if (Auth::check() && Auth::user()->email !== 'farheenimam@gmail.com') {
+            abort(403, 'Unauthorized access');
+        }
+
+        $user = User::with('role')->findOrFail($id);
+        
+        // Get user's uploaded papers (if researcher)
+        $uploadedPapers = Paper::where('uploaded_by', $user->id)
+            ->with(['categories', 'comments.user'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+        
+        // Get user's comments (if reviewer)
+        $comments = Comment::where('user_id', $user->id)
+            ->with(['paper.uploader', 'paper.categories'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+        
+        // Get papers approved by this user (if reviewer)
+        $approvedPapers = Paper::where('approved_by', $user->id)
+            ->with(['uploader', 'categories'])
+            ->orderBy('updated_at', 'desc')
+            ->get();
+        
+        // Get papers where user is an author
+        $authoredPapers = PaperAuthor::where('user_id', $user->id)
+            ->with(['paper.uploader', 'paper.categories'])
+            ->orderBy('id', 'desc')
+            ->get();
+        
+        // Get feedbacks/comments on user's papers (if researcher)
+        $feedbacks = [];
+        foreach ($uploadedPapers as $paper) {
+            foreach ($paper->comments as $comment) {
+                $feedbacks[] = [
+                    'paper' => $paper,
+                    'comment' => $comment,
+                    'reviewer' => $comment->user,
+                ];
+            }
+        }
+        
+        // Sort feedbacks by date
+        usort($feedbacks, function($a, $b) {
+            return strtotime($b['comment']->created_at) - strtotime($a['comment']->created_at);
+        });
+
+        return view('admin.user-info', compact('user', 'uploadedPapers', 'comments', 'approvedPapers', 'authoredPapers', 'feedbacks'));
+    }
+
     public function deleteUser($id)
     {
         if (Auth::check() && Auth::user()->email !== 'farheenimam@gmail.com') {
@@ -64,6 +117,40 @@ class AdminController extends Controller
         ]);
 
         Session::flash('success', 'User created successfully!');
+        return redirect()->route('admin.dashboard');
+    }
+
+    public function updateUser(Request $request, $id)
+    {
+        if (Auth::check() && Auth::user()->email !== 'farheenimam@gmail.com') {
+            abort(403, 'Unauthorized access');
+        }
+
+        $user = User::findOrFail($id);
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $id,
+            'password' => 'nullable|string|min:6',
+            'role_id' => 'required|exists:roles,id',
+            'affiliation' => 'nullable|string|max:255',
+        ]);
+
+        $data = [
+            'name' => $request->name,
+            'email' => $request->email,
+            'role_id' => $request->role_id,
+            'affiliation' => $request->affiliation,
+        ];
+
+        // Only update password if provided
+        if ($request->filled('password')) {
+            $data['password'] = bcrypt($request->password);
+        }
+
+        $user->update($data);
+
+        Session::flash('success', 'User updated successfully!');
         return redirect()->route('admin.dashboard');
     }
 
@@ -138,6 +225,55 @@ class AdminController extends Controller
         return redirect()->route('admin.dashboard');
     }
 
+    public function updatePaper(Request $request, $id)
+    {
+        if (Auth::check() && Auth::user()->email !== 'farheenimam@gmail.com') {
+            abort(403, 'Unauthorized access');
+        }
+
+        $paper = Paper::findOrFail($id);
+
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'abstract' => 'required|string',
+            'pdf_file' => 'nullable|file|mimes:pdf|max:10240', // 10MB max, optional for update
+            'publication_year' => 'required|integer|min:1900|max:' . (date('Y') + 1),
+            'category_id' => 'required|exists:categories,id',
+            'uploaded_by' => 'required|exists:users,id',
+            'status' => 'required|in:pending,approved,rejected',
+        ]);
+
+        $data = [
+            'title' => $request->title,
+            'abstract' => $request->abstract,
+            'publication_year' => $request->publication_year,
+            'status' => $request->status,
+            'uploaded_by' => $request->uploaded_by,
+        ];
+
+        // Handle PDF upload if new file is provided
+        if ($request->hasFile('pdf_file')) {
+            // Delete old PDF file if exists
+            if ($paper->pdf_path && file_exists(public_path($paper->pdf_path))) {
+                unlink(public_path($paper->pdf_path));
+            }
+
+            $pdfFile = $request->file('pdf_file');
+            $filename = time() . '_' . $pdfFile->getClientOriginalName();
+            $pdfPath = 'papers/' . $filename;
+            $pdfFile->move(public_path('papers'), $filename);
+            $data['pdf_path'] = $pdfPath;
+        }
+
+        $paper->update($data);
+
+        // Update category relationship
+        $paper->categories()->sync([$request->category_id]);
+
+        Session::flash('success', 'Paper updated successfully!');
+        return redirect()->route('admin.dashboard');
+    }
+
     // Author Management
     public function deleteAuthor($id)
     {
@@ -177,6 +313,32 @@ class AdminController extends Controller
         return redirect()->route('admin.dashboard');
     }
 
+    public function updateAuthor(Request $request, $id)
+    {
+        if (Auth::check() && Auth::user()->email !== 'farheenimam@gmail.com') {
+            abort(403, 'Unauthorized access');
+        }
+
+        $author = PaperAuthor::findOrFail($id);
+
+        $request->validate([
+            'paper_id' => 'required|exists:papers,id',
+            'author_name' => 'required|string|max:150',
+            'author_email' => 'nullable|email|max:150',
+            'affiliation' => 'nullable|string|max:255',
+        ]);
+
+        $author->update([
+            'paper_id' => $request->paper_id,
+            'author_name' => $request->author_name,
+            'author_email' => $request->author_email,
+            'affiliation' => $request->affiliation,
+        ]);
+
+        Session::flash('success', 'Author updated successfully!');
+        return redirect()->route('admin.dashboard');
+    }
+
     // Category Management
     public function deleteCategory($id)
     {
@@ -207,6 +369,27 @@ class AdminController extends Controller
         ]);
 
         Session::flash('success', 'Category created successfully!');
+        return redirect()->route('admin.dashboard');
+    }
+
+    public function updateCategory(Request $request, $id)
+    {
+        if (Auth::check() && Auth::user()->email !== 'farheenimam@gmail.com') {
+            abort(403, 'Unauthorized access');
+        }
+
+        $category = Category::findOrFail($id);
+
+        $request->validate([
+            'name' => 'required|string|max:100|unique:categories,name,' . $id,
+        ]);
+
+        $category->update([
+            'name' => $request->name,
+            'slug' => \Illuminate\Support\Str::slug($request->name),
+        ]);
+
+        Session::flash('success', 'Category updated successfully!');
         return redirect()->route('admin.dashboard');
     }
 }

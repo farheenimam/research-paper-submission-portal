@@ -79,6 +79,62 @@
                 </form>
             </div>
 
+            <!-- Update User Forms (hidden by default) -->
+            @foreach($users as $user)
+            <div id="edit-user-form-{{ $user->id }}" class="edit-form" style="display: none;">
+                <form method="POST" action="{{ route('admin.update-user', $user->id) }}" class="admin-form">
+                    @csrf
+                    @method('PUT')
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Name *</label>
+                            <input type="text" name="name" class="form-control" value="{{ $user->name }}" 
+                                   required 
+                                   minlength="2"
+                                   maxlength="150"
+                                   pattern="[A-Za-z\s]{2,}"
+                                   title="Name must be at least 2 characters and contain only letters and spaces">
+                        </div>
+                        <div class="form-group">
+                            <label>Email *</label>
+                            <input type="email" name="email" class="form-control" value="{{ $user->email }}" 
+                                   required 
+                                   maxlength="150"
+                                   pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+                                   title="Please enter a valid email address">
+                        </div>
+                        <div class="form-group">
+                            <label>Password (Leave blank to keep current)</label>
+                            <input type="password" name="password" class="form-control" 
+                                   minlength="6"
+                                   maxlength="255"
+                                   pattern=".{6,}"
+                                   title="Password must be at least 6 characters long">
+                        </div>
+                        <div class="form-group">
+                            <label>Role *</label>
+                            <select name="role_id" class="form-control" required>
+                                @foreach(\App\Models\Role::all() as $role)
+                                    <option value="{{ $role->id }}" {{ $user->role_id == $role->id ? 'selected' : '' }}>{{ ucfirst($role->name) }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Affiliation</label>
+                            <input type="text" name="affiliation" class="form-control" value="{{ $user->affiliation }}"
+                                   maxlength="255"
+                                   pattern=".{0,255}"
+                                   title="Affiliation must not exceed 255 characters">
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">Update</button>
+                            <button type="button" class="btn btn-outline" onclick="toggleEditForm('user', {{ $user->id }})">Cancel</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            @endforeach
+
             <div class="table-responsive">
                 <table class="admin-table">
                     <thead>
@@ -96,13 +152,14 @@
                         @foreach($users as $user)
                             <tr>
                                 <td>{{ $user->id }}</td>
-                                <td>{{ $user->name }}</td>
+                                <td><a href="{{ route('admin.show-user', $user->id) }}" style="color: #2d5016; text-decoration: none; font-weight: 600;">{{ $user->name }}</a></td>
                                 <td>{{ $user->email }}</td>
                                 <td>{{ ucfirst($user->role->name ?? 'N/A') }}</td>
                                 <td>{{ $user->affiliation ?? 'N/A' }}</td>
                                 <td>{{ $user->created_at ? $user->created_at->format('M d, Y') : 'N/A' }}</td>
-                                <td>
-                                    <form method="POST" action="{{ route('admin.delete-user', $user->id) }}" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this user?');">
+                                <td class="actions-cell">
+                                    <button type="button" class="btn btn-primary btn-sm" onclick="toggleEditForm('user', {{ $user->id }})">Update</button>
+                                    <form method="POST" action="{{ route('admin.delete-user', $user->id) }}" onsubmit="return confirm('Are you sure you want to delete this user?');">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-danger btn-sm">Delete</button>
@@ -217,6 +274,79 @@
                     </div>
                 </form>
             </div>
+
+            <!-- Update Paper Forms (hidden by default) -->
+            @foreach($papers as $paper)
+            <div id="edit-paper-form-{{ $paper->id }}" class="edit-form" style="display: none;">
+                <form method="POST" action="{{ route('admin.update-paper', $paper->id) }}" enctype="multipart/form-data" class="admin-form">
+                    @csrf
+                    @method('PUT')
+                    <div class="form-row">
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label>Title *</label>
+                            <input type="text" name="title" class="form-control" value="{{ $paper->title }}" 
+                                   required 
+                                   minlength="5"
+                                   maxlength="255"
+                                   pattern=".{5,255}"
+                                   title="Title must be between 5 and 255 characters">
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label>Abstract *</label>
+                            <textarea name="abstract" class="form-control" rows="4" 
+                                      required
+                                      minlength="50"
+                                      title="Abstract must be at least 50 characters long">{{ $paper->abstract }}</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Publication Year *</label>
+                            <input type="number" name="publication_year" class="form-control" 
+                                   value="{{ $paper->publication_year }}"
+                                   min="1900" 
+                                   max="{{ date('Y') + 1 }}" 
+                                   required
+                                   step="1"
+                                   title="Publication year must be between 1900 and {{ date('Y') + 1 }}">
+                        </div>
+                        <div class="form-group">
+                            <label>Category *</label>
+                            <select name="category_id" class="form-control" required>
+                                @foreach($categories as $category)
+                                    <option value="{{ $category->id }}" {{ $paper->categories->contains($category->id) ? 'selected' : '' }}>{{ $category->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Uploaded By *</label>
+                            <select name="uploaded_by" class="form-control" required>
+                                @foreach($users as $user)
+                                    <option value="{{ $user->id }}" {{ $paper->uploaded_by == $user->id ? 'selected' : '' }}>{{ $user->name }} ({{ $user->email }})</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Status *</label>
+                            <select name="status" class="form-control" required>
+                                <option value="pending" {{ $paper->status == 'pending' ? 'selected' : '' }}>Pending</option>
+                                <option value="approved" {{ $paper->status == 'approved' ? 'selected' : '' }}>Approved</option>
+                                <option value="rejected" {{ $paper->status == 'rejected' ? 'selected' : '' }}>Rejected</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label>PDF File (Leave blank to keep current file)</label>
+                            <input type="file" name="pdf_file" class="form-control" 
+                                   accept=".pdf,application/pdf" 
+                                   title="Please upload a PDF file (max 10MB)">
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <button type="submit" class="btn btn-primary">Update</button>
+                            <button type="button" class="btn btn-outline" onclick="toggleEditForm('paper', {{ $paper->id }})">Cancel</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            @endforeach
+
             <div class="table-responsive">
                 <table class="admin-table">
                     <thead>
@@ -241,8 +371,9 @@
                                 <td>{{ $paper->categories->first()->name ?? 'N/A' }}</td>
                                 <td>{{ $paper->publication_year }}</td>
                                 <td>{{ $paper->created_at ? $paper->created_at->format('M d, Y') : 'N/A' }}</td>
-                                <td>
-                                    <form method="POST" action="{{ route('admin.delete-paper', $paper->id) }}" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this paper?');">
+                                <td class="actions-cell">
+                                    <button type="button" class="btn btn-primary btn-sm" onclick="toggleEditForm('paper', {{ $paper->id }})">Update</button>
+                                    <form method="POST" action="{{ route('admin.delete-paper', $paper->id) }}" onsubmit="return confirm('Are you sure you want to delete this paper?');">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-danger btn-sm">Delete</button>
@@ -307,6 +438,53 @@
                 </form>
             </div>
 
+            <!-- Update Author Forms (hidden by default) -->
+            @foreach($authors as $author)
+            <div id="edit-author-form-{{ $author->id }}" class="edit-form" style="display: none;">
+                <form method="POST" action="{{ route('admin.update-author', $author->id) }}" class="admin-form">
+                    @csrf
+                    @method('PUT')
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Paper *</label>
+                            <select name="paper_id" class="form-control" required>
+                                @foreach($papers as $paper)
+                                    <option value="{{ $paper->id }}" {{ $author->paper_id == $paper->id ? 'selected' : '' }}>{{ $paper->title }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Author Name *</label>
+                            <input type="text" name="author_name" class="form-control" value="{{ $author->author_name }}" 
+                                   required 
+                                   minlength="2"
+                                   maxlength="150"
+                                   pattern="[A-Za-z\s]{2,}"
+                                   title="Author name must be at least 2 characters and contain only letters and spaces">
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" name="author_email" class="form-control" value="{{ $author->author_email }}"
+                                   maxlength="150"
+                                   pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+                                   title="Please enter a valid email address">
+                        </div>
+                        <div class="form-group">
+                            <label>Affiliation</label>
+                            <input type="text" name="affiliation" class="form-control" value="{{ $author->affiliation }}"
+                                   maxlength="255"
+                                   pattern=".{0,255}"
+                                   title="Affiliation must not exceed 255 characters">
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">Update</button>
+                            <button type="button" class="btn btn-outline" onclick="toggleEditForm('author', {{ $author->id }})">Cancel</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            @endforeach
+
             <div class="table-responsive">
                 <table class="admin-table">
                     <thead>
@@ -327,8 +505,9 @@
                                 <td>{{ $author->author_email ?? 'N/A' }}</td>
                                 <td>{{ $author->affiliation ?? 'N/A' }}</td>
                                 <td>{{ Str::limit($author->paper->title ?? 'N/A', 40) }}</td>
-                                <td>
-                                    <form method="POST" action="{{ route('admin.delete-author', $author->id) }}" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this author?');">
+                                <td class="actions-cell">
+                                    <button type="button" class="btn btn-primary btn-sm" onclick="toggleEditForm('author', {{ $author->id }})">Update</button>
+                                    <form method="POST" action="{{ route('admin.delete-author', $author->id) }}" onsubmit="return confirm('Are you sure you want to delete this author?');">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-danger btn-sm">Delete</button>
@@ -370,6 +549,31 @@
                 </form>
             </div>
 
+            <!-- Update Category Forms (hidden by default) -->
+            @foreach($categories as $category)
+            <div id="edit-category-form-{{ $category->id }}" class="edit-form" style="display: none;">
+                <form method="POST" action="{{ route('admin.update-category', $category->id) }}" class="admin-form">
+                    @csrf
+                    @method('PUT')
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Category Name *</label>
+                            <input type="text" name="name" class="form-control" value="{{ $category->name }}" 
+                                   required 
+                                   minlength="2"
+                                   maxlength="100"
+                                   pattern="[A-Za-z0-9\s]{2,}"
+                                   title="Category name must be at least 2 characters and contain only letters, numbers, and spaces">
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">Update</button>
+                            <button type="button" class="btn btn-outline" onclick="toggleEditForm('category', {{ $category->id }})">Cancel</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            @endforeach
+
             <div class="table-responsive">
                 <table class="admin-table">
                     <thead>
@@ -388,8 +592,9 @@
                                 <td>{{ $category->name }}</td>
                                 <td>{{ $category->slug }}</td>
                                 <td>{{ $category->created_at ? $category->created_at->format('M d, Y') : 'N/A' }}</td>
-                                <td>
-                                    <form method="POST" action="{{ route('admin.delete-category', $category->id) }}" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this category?');">
+                                <td class="actions-cell">
+                                    <button type="button" class="btn btn-primary btn-sm" onclick="toggleEditForm('category', {{ $category->id }})">Update</button>
+                                    <form method="POST" action="{{ route('admin.delete-category', $category->id) }}" onsubmit="return confirm('Are you sure you want to delete this category?');">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-danger btn-sm">Delete</button>
@@ -409,6 +614,17 @@ function toggleAddForm(type) {
     const form = document.getElementById('add-' + type + '-form');
     if (form.style.display === 'none') {
         form.style.display = 'block';
+    } else {
+        form.style.display = 'none';
+    }
+}
+
+function toggleEditForm(type, id) {
+    const form = document.getElementById('edit-' + type + '-form-' + id);
+    if (form.style.display === 'none') {
+        form.style.display = 'block';
+        // Scroll to form
+        form.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     } else {
         form.style.display = 'none';
     }
@@ -482,6 +698,23 @@ function toggleAddForm(type) {
     background-color: #f8f9fa;
 }
 
+.admin-table td:last-child {
+    white-space: nowrap;
+}
+
+.admin-table .actions-cell {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.admin-table .actions-cell form {
+    margin: 0;
+    display: inline-block;
+}
+
 .status-badge {
     padding: 4px 12px;
     border-radius: 12px;
@@ -505,11 +738,17 @@ function toggleAddForm(type) {
     color: #721c24;
 }
 
-.add-form {
+.add-form, .edit-form {
     background: #f8f9fa;
     padding: 20px;
     border-radius: 8px;
     margin-bottom: 20px;
+    border: 2px solid #2d5016;
+}
+
+.edit-form {
+    background: #fff9e6;
+    border-color: #ffc107;
 }
 
 .form-row {
@@ -546,6 +785,22 @@ function toggleAddForm(type) {
 .btn-sm {
     padding: 6px 12px;
     font-size: 12px;
+    margin: 0 2px;
+    display: inline-block;
+}
+
+.btn-primary {
+    background-color: #2d5016;
+    color: #ffffff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #1f350f;
 }
 
 .btn-danger {
@@ -560,6 +815,21 @@ function toggleAddForm(type) {
 
 .btn-danger:hover {
     background-color: #c82333;
+}
+
+.btn-outline {
+    background-color: transparent;
+    color: #2d5016;
+    border: 2px solid #2d5016;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-outline:hover {
+    background-color: #2d5016;
+    color: #ffffff;
 }
 
 .alert {
