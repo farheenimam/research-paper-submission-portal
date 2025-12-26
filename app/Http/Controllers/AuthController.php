@@ -37,7 +37,7 @@ class AuthController extends Controller
                 } elseif ($roleName === 'researcher') {
                     // Try to find researcher by name or common ID
                     $selectedRole = $roles->first(function($role) {
-                        return strtolower($role->name) === 'researcher';
+                        $selectedRole = \App\Models\Role::find(2);
                     });
                 }
             }
