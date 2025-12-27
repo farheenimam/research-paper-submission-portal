@@ -83,7 +83,7 @@ class ReviewerController extends Controller
     {
         $request->validate([
             'status' => 'required|in:pending,approved,rejected',
-            'comment' => 'nullable|string|max:5000',
+            'comment' => 'nullable|string|max:500',
         ]);
 
         $paper = Paper::findOrFail($id);
