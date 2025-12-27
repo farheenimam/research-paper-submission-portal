@@ -116,7 +116,7 @@
 
                         @if($paper->approved_by == Auth::id())
                             <div class="approval-info">
-                                <strong>✅ Approved by you</strong>
+                                <strong>Reviewed by you</strong>
                             </div>
                         @endif
 
