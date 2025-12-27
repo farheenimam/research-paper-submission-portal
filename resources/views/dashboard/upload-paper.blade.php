@@ -95,7 +95,7 @@
                     <div class="author-entry" data-author-index="0">
                         <div class="author-header">
                             <h4>Author 1</h4>
-                            <button type="button" class="remove-author" onclick="removeAuthor(0)" style="display: none;">Remove</button>
+                            <button type="button" class="remove-author" onclick="authorManagement.removeAuthor(0)" style="display: none;">Remove</button>
                         </div>
                         
                         <div class="author-fields">
@@ -151,9 +151,11 @@
 
 @section('scripts')
 <script>
-let authorIndex = 1;
-
-document.getElementById('add-author').addEventListener('click', function() {
+document.addEventListener('DOMContentLoaded', function() {
+    authorManagement.init(1);
+});
+</script>
+@endsection
     const container = document.getElementById('authors-container');
     const newAuthor = document.createElement('div');
     newAuthor.className = 'author-entry';

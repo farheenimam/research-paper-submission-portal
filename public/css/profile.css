@@ -253,34 +253,4 @@
     background-color: #c82333;
 }
 
-/* Mobile Responsive */
-@media (max-width: 768px) {
-    .profile-content {
-        grid-template-columns: 1fr;
-        gap: 20px;
-    }
-    
-    .profile-photo-section,
-    .profile-form-section {
-        padding: 20px;
-    }
-    
-    .profile-photo-large,
-    .profile-photo-placeholder {
-        width: 120px;
-        height: 120px;
-    }
-    
-    .profile-photo-placeholder {
-        font-size: 36px;
-    }
-    
-    .form-actions {
-        flex-direction: column;
-    }
-    
-    .stats-grid {
-        grid-template-columns: 1fr;
-    }
-}
 

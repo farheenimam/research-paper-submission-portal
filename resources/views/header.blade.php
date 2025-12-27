@@ -9,13 +9,6 @@
                 Research Portal
             </a>
 
-            <!-- Mobile Menu Toggle -->
-            <button class="mobile-toggle" id="mobileToggle">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-
             <!-- Navigation Menu -->
             <ul class="navbar-nav" id="navbarNav">
                 @guest
@@ -156,55 +149,4 @@
     </div>
 </header>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Mobile menu toggle
-    const mobileToggle = document.getElementById('mobileToggle');
-    const navbarNav = document.getElementById('navbarNav');
-    
-    if (mobileToggle && navbarNav) {
-        mobileToggle.addEventListener('click', function() {
-            mobileToggle.classList.toggle('active');
-            navbarNav.classList.toggle('show');
-        });
-    }
-    
-    // Profile dropdown toggle
-    const profileToggle = document.getElementById('profileToggle');
-    const profileDropdown = document.getElementById('profileDropdown');
-    
-    if (profileToggle && profileDropdown) {
-        profileToggle.addEventListener('click', function(e) {
-            e.stopPropagation();
-            profileDropdown.classList.toggle('show');
-        });
-        
-        // Close dropdown when clicking outside
-        document.addEventListener('click', function(e) {
-            if (!profileToggle.contains(e.target) && !profileDropdown.contains(e.target)) {
-                profileDropdown.classList.remove('show');
-            }
-        });
-    }
-    
-    // Close mobile menu when clicking on nav links
-    const navLinks = document.querySelectorAll('.nav-link');
-    navLinks.forEach(link => {
-        link.addEventListener('click', function() {
-            if (window.innerWidth <= 768) {
-                mobileToggle.classList.remove('active');
-                navbarNav.classList.remove('show');
-            }
-        });
-    });
-    
-    // Handle window resize
-    window.addEventListener('resize', function() {
-        if (window.innerWidth > 768) {
-            mobileToggle.classList.remove('active');
-            navbarNav.classList.remove('show');
-            profileDropdown.classList.remove('show');
-        }
-    });
-});
-</script>
+{{-- Header navigation JavaScript is now in common.js --}}

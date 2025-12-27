@@ -15,7 +15,7 @@
         <div id="users" class="admin-section">
             <div class="section-header">
                 <h2>Users</h2>
-                <button type="button" class="btn btn-primary" onclick="toggleAddForm('user')">Add User</button>
+                <button type="button" class="btn btn-primary" onclick="adminForms.toggleAdd('user')">Add User</button>
             </div>
 
             <!-- Add User Form -->
@@ -67,7 +67,7 @@
                         </div>
                         <div class="form-group">
                             <button type="submit" class="btn btn-primary">Add</button>
-                            <button type="button" class="btn btn-outline" onclick="toggleAddForm('user')">Cancel</button>
+                            <button type="button" class="btn btn-outline" onclick="adminForms.toggleAdd('user')">Cancel</button>
                         </div>
                     </div>
                 </form>
@@ -122,7 +122,7 @@
                         </div>
                         <div class="form-group">
                             <button type="submit" class="btn btn-primary">Update</button>
-                            <button type="button" class="btn btn-outline" onclick="toggleEditForm('user', {{ $user->id }})">Cancel</button>
+                            <button type="button" class="btn btn-outline" onclick="adminForms.toggleEdit('user', {{ $user->id }})">Cancel</button>
                         </div>
                     </div>
                 </form>
@@ -152,7 +152,7 @@
                                 <td>{{ $user->affiliation ?? 'N/A' }}</td>
                                 <td>{{ $user->created_at ? $user->created_at->format('M d, Y') : 'N/A' }}</td>
                                 <td class="actions-cell">
-                                    <button type="button" class="btn btn-primary btn-sm" onclick="toggleEditForm('user', {{ $user->id }})">Update</button>
+                                    <button type="button" class="btn btn-primary btn-sm" onclick="adminForms.toggleEdit('user', {{ $user->id }})">Update</button>
                                     <form method="POST" action="{{ route('admin.delete-user', $user->id) }}" onsubmit="return confirm('Are you sure you want to delete this user?');">
                                         @csrf
                                         @method('DELETE')
@@ -170,7 +170,7 @@
         <div id="papers" class="admin-section">
             <div class="section-header">
                 <h2>Papers</h2>
-                <button type="button" class="btn btn-primary" onclick="toggleAddForm('paper')">Add Paper</button>
+                <button type="button" class="btn btn-primary" onclick="adminForms.toggleAdd('paper')">Add Paper</button>
             </div>
 
             <!-- Add Paper Form -->
@@ -263,7 +263,7 @@
                         </div>
                         <div class="form-group" style="grid-column: 1 / -1;">
                             <button type="submit" class="btn btn-primary">Add</button>
-                            <button type="button" class="btn btn-outline" onclick="toggleAddForm('paper')">Cancel</button>
+                            <button type="button" class="btn btn-outline" onclick="adminForms.toggleAdd('paper')">Cancel</button>
                         </div>
                     </div>
                 </form>
@@ -334,7 +334,7 @@
                         </div>
                         <div class="form-group" style="grid-column: 1 / -1;">
                             <button type="submit" class="btn btn-primary">Update</button>
-                            <button type="button" class="btn btn-outline" onclick="toggleEditForm('paper', {{ $paper->id }})">Cancel</button>
+                            <button type="button" class="btn btn-outline" onclick="adminForms.toggleEdit('paper', {{ $paper->id }})">Cancel</button>
                         </div>
                     </div>
                 </form>
@@ -366,7 +366,7 @@
                                 <td>{{ $paper->publication_year }}</td>
                                 <td>{{ $paper->created_at ? $paper->created_at->format('M d, Y') : 'N/A' }}</td>
                                 <td class="actions-cell">
-                                    <button type="button" class="btn btn-primary btn-sm" onclick="toggleEditForm('paper', {{ $paper->id }})">Update</button>
+                                    <button type="button" class="btn btn-primary btn-sm" onclick="adminForms.toggleEdit('paper', {{ $paper->id }})">Update</button>
                                     <form method="POST" action="{{ route('admin.delete-paper', $paper->id) }}" onsubmit="return confirm('Are you sure you want to delete this paper?');">
                                         @csrf
                                         @method('DELETE')
@@ -384,7 +384,7 @@
         <div id="authors" class="admin-section">
             <div class="section-header">
                 <h2>Authors</h2>
-                <button type="button" class="btn btn-primary" onclick="toggleAddForm('author')">Add Author</button>
+                <button type="button" class="btn btn-primary" onclick="adminForms.toggleAdd('author')">Add Author</button>
             </div>
 
             <!-- Add Author Form -->
@@ -426,7 +426,7 @@
                         </div>
                         <div class="form-group">
                             <button type="submit" class="btn btn-primary">Add</button>
-                            <button type="button" class="btn btn-outline" onclick="toggleAddForm('author')">Cancel</button>
+                            <button type="button" class="btn btn-outline" onclick="adminForms.toggleAdd('author')">Cancel</button>
                         </div>
                     </div>
                 </form>
@@ -472,7 +472,7 @@
                         </div>
                         <div class="form-group">
                             <button type="submit" class="btn btn-primary">Update</button>
-                            <button type="button" class="btn btn-outline" onclick="toggleEditForm('author', {{ $author->id }})">Cancel</button>
+                            <button type="button" class="btn btn-outline" onclick="adminForms.toggleEdit('author', {{ $author->id }})">Cancel</button>
                         </div>
                     </div>
                 </form>
@@ -500,7 +500,7 @@
                                 <td>{{ $author->affiliation ?? 'N/A' }}</td>
                                 <td>{{ Str::limit($author->paper->title ?? 'N/A', 40) }}</td>
                                 <td class="actions-cell">
-                                    <button type="button" class="btn btn-primary btn-sm" onclick="toggleEditForm('author', {{ $author->id }})">Update</button>
+                                    <button type="button" class="btn btn-primary btn-sm" onclick="adminForms.toggleEdit('author', {{ $author->id }})">Update</button>
                                     <form method="POST" action="{{ route('admin.delete-author', $author->id) }}" onsubmit="return confirm('Are you sure you want to delete this author?');">
                                         @csrf
                                         @method('DELETE')
@@ -518,7 +518,7 @@
         <div id="categories" class="admin-section">
             <div class="section-header">
                 <h2>Categories</h2>
-                <button type="button" class="btn btn-primary" onclick="toggleAddForm('category')">Add Category</button>
+                <button type="button" class="btn btn-primary" onclick="adminForms.toggleAdd('category')">Add Category</button>
             </div>
 
             <!-- Add Category Form -->
@@ -537,7 +537,7 @@
                         </div>
                         <div class="form-group">
                             <button type="submit" class="btn btn-primary">Add</button>
-                            <button type="button" class="btn btn-outline" onclick="toggleAddForm('category')">Cancel</button>
+                            <button type="button" class="btn btn-outline" onclick="adminForms.toggleAdd('category')">Cancel</button>
                         </div>
                     </div>
                 </form>
@@ -561,7 +561,7 @@
                         </div>
                         <div class="form-group">
                             <button type="submit" class="btn btn-primary">Update</button>
-                            <button type="button" class="btn btn-outline" onclick="toggleEditForm('category', {{ $category->id }})">Cancel</button>
+                            <button type="button" class="btn btn-outline" onclick="adminForms.toggleEdit('category', {{ $category->id }})">Cancel</button>
                         </div>
                     </div>
                 </form>
@@ -587,7 +587,7 @@
                                 <td>{{ $category->slug }}</td>
                                 <td>{{ $category->created_at ? $category->created_at->format('M d, Y') : 'N/A' }}</td>
                                 <td class="actions-cell">
-                                    <button type="button" class="btn btn-primary btn-sm" onclick="toggleEditForm('category', {{ $category->id }})">Update</button>
+                                    <button type="button" class="btn btn-primary btn-sm" onclick="adminForms.toggleEdit('category', {{ $category->id }})">Update</button>
                                     <form method="POST" action="{{ route('admin.delete-category', $category->id) }}" onsubmit="return confirm('Are you sure you want to delete this category?');">
                                         @csrf
                                         @method('DELETE')
@@ -603,27 +603,7 @@
     </div>
 </div>
 
-<script>
-function toggleAddForm(type) {
-    const form = document.getElementById('add-' + type + '-form');
-    if (form.style.display === 'none') {
-        form.style.display = 'block';
-    } else {
-        form.style.display = 'none';
-    }
-}
-
-function toggleEditForm(type, id) {
-    const form = document.getElementById('edit-' + type + '-form-' + id);
-    if (form.style.display === 'none') {
-        form.style.display = 'block';
-        // Scroll to form
-        form.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    } else {
-        form.style.display = 'none';
-    }
-}
-</script>
+{{-- Admin form toggle functions are now in common.js --}}
 
 <style>
 .admin-dashboard {

@@ -148,29 +148,8 @@
 </div>
 
 <script>
-function checkPasswordMatch() {
-    const password = document.getElementById('password');
-    const passwordConfirmation = document.getElementById('password_confirmation');
-    const messageDiv = document.getElementById('password-match-message');
-    
-    if (passwordConfirmation.value && password.value !== passwordConfirmation.value) {
-        messageDiv.textContent = 'Passwords do not match';
-        messageDiv.style.display = 'block';
-        passwordConfirmation.setCustomValidity('Passwords do not match');
-    } else {
-        messageDiv.style.display = 'none';
-        passwordConfirmation.setCustomValidity('');
-    }
-}
-
 document.addEventListener('DOMContentLoaded', function() {
-    const password = document.getElementById('password');
-    const passwordConfirmation = document.getElementById('password_confirmation');
-    
-    if (password && passwordConfirmation) {
-        password.addEventListener('input', checkPasswordMatch);
-        passwordConfirmation.addEventListener('input', checkPasswordMatch);
-    }
+    passwordMatch.init();
     
     @if(isset($selectedRole))
     // Ensure role cannot be changed
@@ -178,20 +157,16 @@ document.addEventListener('DOMContentLoaded', function() {
     const roleHidden = document.getElementById('role_id');
     
     if (roleInput && roleHidden) {
-        // Prevent any changes to the role field
         roleInput.addEventListener('input', function(e) {
             e.preventDefault();
             this.value = '{{ ucfirst($selectedRole->name) }}';
         });
         
-        // Ensure hidden field always has the correct value
         roleHidden.value = '{{ $selectedRole->id }}';
         
-        // Prevent form manipulation
         const form = document.querySelector('.auth-form');
         if (form) {
             form.addEventListener('submit', function(e) {
-                // Double-check the role_id before submission
                 if (roleHidden.value !== '{{ $selectedRole->id }}') {
                     roleHidden.value = '{{ $selectedRole->id }}';
                 }

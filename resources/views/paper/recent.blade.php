@@ -14,67 +14,31 @@
 
         <!-- Search Bar -->
         <div class="search-section">
-            <form class="search-form-recent" action="{{ route('paper.recent') }}" method="GET">
-                <input type="text" 
-                       class="search-input-recent" 
-                       name="search"
-                       value="{{ $query }}"
-                       placeholder="Search research papers..."
-                       autocomplete="off"
-                       maxlength="255"
-                       pattern=".{0,255}"
-                       title="Search query must not exceed 255 characters">
-                <!-- Preserve filter values when searching -->
-                @if(!empty($categoryId))
-                    <input type="hidden" name="category" value="{{ $categoryId }}">
-                @endif
-                @if(!empty($year))
-                    <input type="hidden" name="year" value="{{ $year }}">
-                @endif
-                <button type="submit" class="search-btn-recent">SEARCH</button>
-            </form>
+            @include('components.search-form', [
+                'route' => 'paper.recent',
+                'query' => $query,
+                'placeholder' => 'Search research papers...',
+                'formClass' => 'search-form-recent',
+                'inputClass' => 'search-input-recent',
+                'buttonClass' => 'search-btn-recent',
+                'inputId' => 'searchInputRecent',
+                'hiddenFields' => [
+                    'category' => $categoryId ?? '',
+                    'year' => $year ?? ''
+                ]
+            ])
         </div>
 
         <!-- Filters Section -->
         <div class="search-filters-section">
-            <form class="filters-form" action="{{ route('paper.recent') }}" method="GET">
-                <input type="hidden" name="search" value="{{ $query }}">
-                
-                <div class="filters-grid">
-                    <div class="filter-group">
-                        <label for="category" class="filter-label">Category</label>
-                        <select name="category" id="category" class="filter-select">
-                            <option value="">All Categories</option>
-                            @if(isset($categories))
-                                @foreach($categories as $category)
-                                    <option value="{{ $category->id }}" {{ $categoryId == $category->id ? 'selected' : '' }}>
-                                        {{ $category->name }}
-                                    </option>
-                                @endforeach
-                            @endif
-                        </select>
-                    </div>
-
-                    <div class="filter-group">
-                        <label for="year" class="filter-label">Publication Year</label>
-                        <select name="year" id="year" class="filter-select">
-                            <option value="">All Years</option>
-                            @if(isset($availableYears))
-                                @foreach($availableYears as $availableYear)
-                                    <option value="{{ $availableYear }}" {{ $year == $availableYear ? 'selected' : '' }}>
-                                        {{ $availableYear }}
-                                    </option>
-                                @endforeach
-                            @endif
-                        </select>
-                    </div>
-
-                    <div class="filter-actions">
-                        <button type="submit" class="btn-filter-apply">Apply Filters</button>
-                        <a href="{{ route('paper.recent') }}{{ !empty($query) ? '?search=' . urlencode($query) : '' }}" class="btn-filter-clear">Clear</a>
-                    </div>
-                </div>
-            </form>
+            @include('components.filters-form', [
+                'route' => 'paper.recent',
+                'query' => $query,
+                'categoryId' => $categoryId ?? '',
+                'year' => $year ?? '',
+                'categories' => $categories ?? collect(),
+                'availableYears' => $availableYears ?? []
+            ])
         </div>
 
         <!-- Results Info -->

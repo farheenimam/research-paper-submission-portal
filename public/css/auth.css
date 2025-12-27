@@ -96,29 +96,3 @@
     cursor: not-allowed !important;
     color: #6c757d;
 }
-
-/* Mobile Responsive */
-@media (max-width: 768px) {
-    .auth-container {
-        padding: 20px 15px;
-        min-height: calc(100vh - 150px);
-    }
-    
-    .auth-card {
-        padding: 30px 20px;
-    }
-    
-    .auth-header h2 {
-        font-size: 28px;
-    }
-}
-
-@media (max-width: 480px) {
-    .auth-card {
-        padding: 20px 15px;
-    }
-    
-    .auth-header h2 {
-        font-size: 24px;
-    }
-}

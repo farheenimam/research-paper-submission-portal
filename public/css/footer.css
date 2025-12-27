@@ -92,25 +92,3 @@ body {
 .main-content {
     flex: 1;
 }
-
-/* Mobile Responsive */
-@media (max-width: 768px) {
-    .footer {
-        padding: 30px 0 15px;
-    }
-    
-    .footer-content {
-        flex-direction: column;
-        gap: 20px;
-        text-align: center;
-    }
-    
-    .social-links {
-        justify-content: center;
-    }
-    
-    .footer-section h4,
-    .footer-section h5 {
-        font-size: 16px;
-    }
-}

@@ -11,25 +11,15 @@
             <div class="search-header-content">
                 <h1>Research Portal</h1>
                 <div class="search-container-page">
-                    <form class="search-form-page" action="{{ route('search') }}" method="GET">
-                        <input type="text" 
-                               class="search-input-page" 
-                               name="search"
-                               value="{{ $query }}"
-                               placeholder="Search research papers..."
-                               autocomplete="off"
-                               id="searchInput"
-                               maxlength="255"
-                               pattern=".{0,255}"
-                               title="Search query must not exceed 255 characters">
-                        @if(!empty($categoryId))
-                            <input type="hidden" name="category" value="{{ $categoryId }}">
-                        @endif
-                        @if(!empty($year))
-                            <input type="hidden" name="year" value="{{ $year }}">
-                        @endif
-                        <button type="submit" class="search-btn-page">SEARCH</button>
-                    </form>
+                    @include('components.search-form', [
+                        'route' => 'search',
+                        'query' => $query,
+                        'placeholder' => 'Search research papers...',
+                        'hiddenFields' => [
+                            'category' => $categoryId ?? '',
+                            'year' => $year ?? ''
+                        ]
+                    ])
                 </div>
             </div>
         </div>
@@ -40,44 +30,14 @@
         <div class="container">
             <!-- Filters Section -->
             <div class="search-filters-section">
-                <form class="filters-form" action="{{ route('search') }}" method="GET">
-                    <input type="hidden" name="search" value="{{ $query }}">
-                    
-                    <div class="filters-grid">
-                        <div class="filter-group">
-                            <label for="category" class="filter-label">Category</label>
-                            <select name="category" id="category" class="filter-select">
-                                <option value="">All Categories</option>
-                                @if(isset($categories))
-                                    @foreach($categories as $category)
-                                        <option value="{{ $category->id }}" {{ $categoryId == $category->id ? 'selected' : '' }}>
-                                            {{ $category->name }}
-                                        </option>
-                                    @endforeach
-                                @endif
-                            </select>
-                        </div>
-
-                        <div class="filter-group">
-                            <label for="year" class="filter-label">Publication Year</label>
-                            <select name="year" id="year" class="filter-select">
-                                <option value="">All Years</option>
-                                @if(isset($availableYears))
-                                    @foreach($availableYears as $availableYear)
-                                        <option value="{{ $availableYear }}" {{ $year == $availableYear ? 'selected' : '' }}>
-                                            {{ $availableYear }}
-                                        </option>
-                                    @endforeach
-                                @endif
-                            </select>
-                        </div>
-
-                        <div class="filter-actions">
-                            <button type="submit" class="btn-filter-apply">Apply Filters</button>
-                            <a href="{{ route('search') }}{{ !empty($query) ? '?search=' . urlencode($query) : '' }}" class="btn-filter-clear">Clear</a>
-                        </div>
-                    </div>
-                </form>
+                @include('components.filters-form', [
+                    'route' => 'search',
+                    'query' => $query,
+                    'categoryId' => $categoryId ?? '',
+                    'year' => $year ?? '',
+                    'categories' => $categories ?? collect(),
+                    'availableYears' => $availableYears ?? []
+                ])
             </div>
 
             @if(!empty($query) || !empty($categoryId) || !empty($year) || $papers->count() > 0)
@@ -186,46 +146,8 @@
 @endsection
 
 @section('scripts')
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const searchInput = document.getElementById('searchInput');
-    
-    // Focus on search input when page loads
-    if (searchInput) {
-        searchInput.focus();
-        
-        // Move cursor to end of text
-        const length = searchInput.value.length;
-        searchInput.setSelectionRange(length, length);
-    }
-});
-
-function toggleSavePaper(paperId, button) {
-    fetch(`/search/save/${paperId}`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            if (data.saved) {
-                button.textContent = '✓ Saved';
-                button.classList.add('saved');
-            } else {
-                button.textContent = 'Save';
-                button.classList.remove('saved');
-            }
-        } else {
-            alert(data.message || 'An error occurred');
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('An error occurred while saving the paper');
-    });
-}
-</script>
+@include('components.search-scripts', [
+    'inputId' => 'searchInput',
+    'includeSaveFunction' => true
+])
 @endsection

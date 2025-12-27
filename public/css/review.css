@@ -436,43 +436,4 @@ textarea.form-control {
     font-weight: 600;
 }
 
-/* Mobile Responsive */
-@media (max-width: 768px) {
-    .review-header {
-        flex-direction: column;
-    }
-    
-    .review-header h1 {
-        font-size: 24px;
-    }
-    
-    .info-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .form-actions {
-        flex-direction: column;
-    }
-    
-    .form-actions .btn {
-        width: 100%;
-    }
-    
-    .comment-header {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    
-    .pdf-preview-container {
-        height: 400px;
-    }
-    
-    .pdf-preview-header {
-        padding: 15px 20px;
-    }
-    
-    .pdf-preview-header h2 {
-        font-size: 20px;
-    }
-}
 

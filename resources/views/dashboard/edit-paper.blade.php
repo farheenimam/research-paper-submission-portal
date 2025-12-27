@@ -210,89 +210,9 @@
 
 @section('scripts')
 <script>
-let authorIndex = {{ $paper->authors->count() }};
-
-document.getElementById('add-author').addEventListener('click', function() {
-    const container = document.getElementById('authors-container');
-    const newAuthor = document.createElement('div');
-    newAuthor.className = 'author-entry';
-    newAuthor.setAttribute('data-author-index', authorIndex);
-    
-    newAuthor.innerHTML = `
-        <div class="author-header">
-            <h4>Author ${authorIndex + 1}</h4>
-            <button type="button" class="remove-author" onclick="removeAuthor(${authorIndex})">Remove</button>
-        </div>
-        
-        <div class="author-fields">
-            <div class="form-group">
-                <label class="form-label">Author Name <span class="required">*</span></label>
-                <input type="text" name="authors[${authorIndex}][name]" class="form-control" 
-                       placeholder="Full name of the author" 
-                       required 
-                       minlength="2"
-                       maxlength="150"
-                       pattern="[A-Za-z\\s]{2,}"
-                       title="Author name must be at least 2 characters and contain only letters and spaces">
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label">Email Address</label>
-                <input type="email" name="authors[${authorIndex}][email]" class="form-control" 
-                       placeholder="author@example.com" 
-                       maxlength="150"
-                       pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,}$"
-                       title="Please enter a valid email address">
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label">Affiliation</label>
-                <input type="text" name="authors[${authorIndex}][affiliation]" class="form-control" 
-                       placeholder="University, Organization, or Company" 
-                       maxlength="255"
-                       pattern=".{0,255}"
-                       title="Affiliation must not exceed 255 characters">
-            </div>
-        </div>
-    `;
-    
-    container.appendChild(newAuthor);
-    authorIndex++;
-    
-    // Show remove button for first author if there are multiple authors
-    updateRemoveButtons();
+document.addEventListener('DOMContentLoaded', function() {
+    authorManagement.init({{ $paper->authors->count() }});
 });
-
-function removeAuthor(index) {
-    const authorEntry = document.querySelector(`[data-author-index="${index}"]`);
-    if (authorEntry) {
-        authorEntry.remove();
-        updateAuthorNumbers();
-        updateRemoveButtons();
-    }
-}
-
-function updateAuthorNumbers() {
-    const authors = document.querySelectorAll('.author-entry');
-    authors.forEach((author, index) => {
-        const header = author.querySelector('h4');
-        header.textContent = `Author ${index + 1}`;
-    });
-}
-
-function updateRemoveButtons() {
-    const authors = document.querySelectorAll('.author-entry');
-    const removeButtons = document.querySelectorAll('.remove-author');
-    
-    if (authors.length > 1) {
-        removeButtons.forEach(button => button.style.display = 'inline-block');
-    } else {
-        removeButtons.forEach(button => button.style.display = 'none');
-    }
-}
-
-// Initialize remove buttons visibility
-updateRemoveButtons();
 </script>
 @endsection
 

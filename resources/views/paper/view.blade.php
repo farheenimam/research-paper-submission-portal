@@ -81,13 +81,13 @@
             <div class="paper-section">
                 <h3>Citation</h3>
                 <div class="citation-box">
-                    <p class="citation-text">
+                    <p class="citation-text" id="citation-text">
                         @foreach($paper->authors as $index => $author){{ $author->author_name }}@if($index < $paper->authors->count() - 1), @endif @endforeach. 
                         ({{ $paper->publication_year }}). 
                         <em>{{ $paper->title }}</em>. 
                         Research Portal.
                     </p>
-                    <button class="btn btn-outline btn-sm copy-citation" onclick="copyCitation()">Copy Citation</button>
+                    <button class="btn btn-outline btn-sm copy-citation" id="copy-citation-btn" onclick="copyCitation()">Copy Citation</button>
                 </div>
             </div>
         </div>
@@ -100,22 +100,5 @@
 @endsection
 
 @section('scripts')
-<script>
-function copyCitation() {
-    const citationText = document.querySelector('.citation-text').textContent;
-    navigator.clipboard.writeText(citationText).then(function() {
-        const button = document.querySelector('.copy-citation');
-        const originalText = button.textContent;
-        button.textContent = 'Copied!';
-        button.style.backgroundColor = '#28a745';
-        button.style.color = '#ffffff';
-        
-        setTimeout(function() {
-            button.textContent = originalText;
-            button.style.backgroundColor = '';
-            button.style.color = '';
-        }, 2000);
-    });
-}
-</script>
+{{-- copyCitation function is now in common.js --}}
 @endsection

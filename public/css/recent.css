@@ -246,37 +246,6 @@
     justify-content: center;
 }
 
-/* Mobile Responsive */
-@media (max-width: 768px) {
-    .page-header h1 {
-        font-size: 28px;
-    }
-    
-    .search-form-recent {
-        flex-direction: column;
-    }
-    
-    .search-input-recent {
-        border-right: 2px solid #e0e0e0;
-        border-bottom: none;
-    }
-    
-    .papers-grid-recent {
-        grid-template-columns: 1fr;
-    }
-    
-    .paper-title-recent a {
-        font-size: 18px;
-    }
-    
-    .paper-actions-recent {
-        flex-direction: column;
-    }
-    
-    .paper-actions-recent .btn {
-        width: 100%;
-    }
-}
 
 /* Search Filters Section */
 .search-filters-section {
@@ -369,32 +338,4 @@
     border-color: #2d5016;
 }
 
-@media (max-width: 768px) {
-    .filters-grid {
-        grid-template-columns: 1fr;
-        gap: 12px;
-    }
-    
-    .filter-actions {
-        flex-direction: column;
-        width: 100%;
-    }
-    
-    .btn-filter-apply,
-    .btn-filter-clear {
-        width: 100%;
-    }
-}
-
-@media (max-width: 480px) {
-    .search-input-recent,
-    .search-btn-recent {
-        padding: 15px 20px;
-        font-size: 16px;
-    }
-    
-    .paper-card-recent {
-        padding: 20px 15px;
-    }
-}
 

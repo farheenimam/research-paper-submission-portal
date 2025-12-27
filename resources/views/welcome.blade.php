@@ -190,11 +190,6 @@
 
 @section('styles')
 <style>
-/* Prevent horizontal overflow */
-body {
-    overflow-x: hidden;
-    max-width: 100vw;
-}
 
 /* Hero Section */
 .hero-section {
@@ -203,9 +198,7 @@ body {
     min-height: 70vh;
     display: flex;
     align-items: center;
-    overflow-x: hidden;
     width: 100%;
-    max-width: 100%;
 }
 
 .hero-content {
@@ -214,13 +207,10 @@ body {
     gap: 60px;
     flex-wrap: wrap;
     width: 100%;
-    max-width: 100%;
 }
 
 .hero-text {
     flex: 1;
-    min-width: 0;
-    max-width: 100%;
 }
 
 .hero-badge {
@@ -260,7 +250,6 @@ body {
 
 .search-form {
     display: flex;
-    max-width: 100%;
     width: 100%;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     border-radius: 5px;
@@ -298,8 +287,6 @@ body {
 
 .hero-visual {
     flex: 1;
-    min-width: 0;
-    max-width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -308,7 +295,6 @@ body {
 .world-map-image {
     position: relative;
     width: 100%;
-    max-width: 100%;
     height: auto;
 }
 
@@ -324,8 +310,6 @@ body {
     padding: 80px 0;
     background-color: #f8f9fa;
     width: 100%;
-    max-width: 100%;
-    overflow-x: hidden;
 }
 
 .services-grid {
@@ -343,7 +327,6 @@ body {
     text-align: center;
     flex: 1;
     min-width: 250px;
-    max-width: 300px;
 }
 
 .service-icon {
@@ -378,8 +361,6 @@ body {
     padding: 80px 0;
     background-color: #ffffff;
     width: 100%;
-    max-width: 100%;
-    overflow-x: hidden;
 }
 
 .join-options {
@@ -397,7 +378,6 @@ body {
     text-align: center;
     flex: 1;
     min-width: 280px;
-    max-width: 320px;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -453,8 +433,6 @@ body {
     padding: 80px 0;
     background-color: #f8f9fa;
     width: 100%;
-    max-width: 100%;
-    overflow-x: hidden;
 }
 
 .about-content {
@@ -463,13 +441,10 @@ body {
     align-items: center;
     flex-wrap: wrap;
     width: 100%;
-    max-width: 100%;
 }
 
 .about-text {
     flex: 1;
-    min-width: 0;
-    max-width: 100%;
 }
 
 .about-text h2 {
@@ -509,8 +484,6 @@ body {
 
 .about-image {
     flex: 1;
-    min-width: 0;
-    max-width: 100%;
 }
 
 .placeholder-image {
@@ -539,8 +512,6 @@ body {
     padding: 60px 0;
     text-align: center;
     width: 100%;
-    max-width: 100%;
-    overflow-x: hidden;
 }
 
 .cta-content h2 {
@@ -555,147 +526,5 @@ body {
     font-size: 18px;
 }
 
-/* Responsive Design */
-@media (max-width: 1200px) {
-    .hero-content {
-        gap: 40px;
-    }
-    
-    .hero-content h1 {
-        font-size: 42px;
-    }
-}
-
-@media (max-width: 992px) {
-    .hero-content {
-        flex-direction: column;
-        gap: 40px;
-        text-align: center;
-    }
-    
-    .hero-text {
-        width: 100%;
-    }
-    
-    .hero-visual {
-        width: 100%;
-    }
-    
-    .world-map-image {
-        max-width: 100%;
-    }
-}
-
-@media (max-width: 768px) {
-    .hero-section {
-        padding: 40px 0 60px;
-    }
-    
-    .hero-content h1 {
-        font-size: 32px;
-    }
-    
-    .hero-content {
-        flex-direction: column;
-        gap: 30px;
-        text-align: center;
-    }
-    
-    .hero-text {
-        width: 100%;
-        padding: 0 15px;
-    }
-    
-    .search-form {
-        flex-direction: column;
-        max-width: 100%;
-    }
-    
-    .search-input {
-        border-right: 2px solid #e0e0e0;
-        border-bottom: none;
-        border-radius: 5px 5px 0 0;
-    }
-    
-    .search-btn {
-        border-top: none;
-        border-radius: 0 0 5px 5px;
-    }
-    
-    .hero-visual {
-        width: 100%;
-        padding: 0 15px;
-    }
-    
-    .world-map-image {
-        max-width: 100%;
-    }
-    
-    .map-image {
-        max-width: 100%;
-    }
-    
-    .hero-content p {
-        font-size: 18px;
-    }
-    
-    .hero-buttons {
-        flex-direction: column;
-        align-items: center;
-    }
-    
-    .services-grid {
-        flex-direction: column;
-        align-items: center;
-    }
-    
-    .join-options {
-        flex-direction: column;
-        align-items: center;
-        gap: 20px;
-    }
-    
-    .join-card {
-        min-width: 100%;
-        max-width: 100%;
-        padding: 20px 15px;
-    }
-    
-    .join-icon {
-        font-size: 40px;
-        margin-bottom: 12px;
-    }
-    
-    .join-card h3 {
-        font-size: 20px;
-    }
-    
-    .join-card p {
-        font-size: 13px;
-        margin-bottom: 15px;
-    }
-    
-    .benefits-list {
-        margin-bottom: 15px;
-    }
-    
-    .benefit-item {
-        font-size: 12px;
-        margin-bottom: 6px;
-    }
-    
-    .about-content {
-        flex-direction: column;
-        text-align: center;
-    }
-    
-    .about-stats {
-        justify-content: center;
-    }
-    
-    .cta-content h2 {
-        font-size: 28px;
-    }
-}
 </style>
 @endsection

@@ -520,37 +520,5 @@
     color: #666666;
     font-style: italic;
 }
-
-@media (max-width: 768px) {
-    .pdf-preview-container {
-        height: 400px;
-    }
-    
-    .pdf-preview-header {
-        padding: 15px 20px;
-    }
-    
-    .pdf-preview-header h2 {
-        font-size: 20px;
-    }
-    
-    .paper-status-header {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    
-    .paper-status-header h1 {
-        font-size: 24px;
-    }
-    
-    .details-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .comment-header {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-}
 </style>
 @endsection

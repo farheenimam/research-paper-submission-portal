@@ -142,18 +142,5 @@
 @section('styles')
 <link href="{{ asset('css/profile.css') }}" rel="stylesheet">
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const fileInput = document.getElementById('profile_photo');
-    const uploadBtn = document.getElementById('upload-btn');
-    
-    fileInput.addEventListener('change', function() {
-        if (this.files && this.files[0]) {
-            uploadBtn.style.display = 'inline-block';
-        } else {
-            uploadBtn.style.display = 'none';
-        }
-    });
-});
-</script>
+{{-- Profile photo upload JavaScript is now in common.js --}}
 @endsection

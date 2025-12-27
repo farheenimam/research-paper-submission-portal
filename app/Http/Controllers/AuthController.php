@@ -145,9 +145,6 @@ class AuthController extends Controller
     }
 
     function logout(){
-        // Get user name before clearing session
-        $userName = Auth::user()->name ?? 'User';
-        
         // Logout the user (this also clears auth session)
         Auth::logout();
         
@@ -157,7 +154,6 @@ class AuthController extends Controller
         // Regenerate CSRF token
         request()->session()->regenerateToken();
         
-        Session::flash('success', 'Goodbye ' . $userName . '! You have been logged out successfully.');
         return redirect(route('login'));
     }
 }
