@@ -56,10 +56,6 @@ class ProfileController extends Controller
         // Update user using Eloquent update method
         User::where('id', $user->id)->update($updateData);
 
-        // Update session data
-        Session::put('user_name', $updateData['name']);
-        Session::put('user_email', $updateData['email']);
-
         Session::flash('success', 'Profile updated successfully!');
         return redirect()->route('profile');
     }

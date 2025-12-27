@@ -11,12 +11,6 @@
             <p>Manage users, papers, authors, and categories</p>
         </div>
 
-        @if(Session::has('success'))
-            <div class="alert alert-success">
-                {{ Session::get('success') }}
-            </div>
-        @endif
-
         <!-- Users Section -->
         <div id="users" class="admin-section">
             <div class="section-header">

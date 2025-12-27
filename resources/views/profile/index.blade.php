@@ -10,12 +10,6 @@
             <p>Manage your account information and preferences</p>
         </div>
 
-        @if(session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
-        @endif
-
         @if($errors->any())
             <div class="alert alert-error">
                 <ul>
@@ -48,14 +42,16 @@
                         <input type="hidden" name="affiliation" value="{{ $user->affiliation }}">
                         <input type="hidden" name="bio" value="{{ $user->bio }}">
                         
-                        <div class="file-input-wrapper">
-                            <input type="file" name="profile_photo" id="profile_photo" 
-                                   accept="image/jpeg,image/png,image/jpg,image/gif" 
-                                   class="file-input"
-                                   title="Accepted formats: JPEG, PNG, JPG, GIF. Max size: 2MB">
-                            <label for="profile_photo" class="btn btn-outline">Choose Photo</label>
+                        <div class="upload-buttons">
+                            <div class="file-input-wrapper">
+                                <input type="file" name="profile_photo" id="profile_photo" 
+                                       accept="image/jpeg,image/png,image/jpg,image/gif" 
+                                       class="file-input"
+                                       title="Accepted formats: JPEG, PNG, JPG, GIF. Max size: 2MB">
+                                <label for="profile_photo" class="btn btn-outline">Choose Photo</label>
+                            </div>
+                            <button type="submit" class="btn btn-primary" id="upload-btn" style="display: none;">Upload</button>
                         </div>
-                        <button type="submit" class="btn btn-primary" id="upload-btn" style="display: none;">Upload</button>
                     </form>
                     
                     @if($user->profile_photo)

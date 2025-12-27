@@ -190,6 +190,12 @@
 
 @section('styles')
 <style>
+/* Prevent horizontal overflow */
+body {
+    overflow-x: hidden;
+    max-width: 100vw;
+}
+
 /* Hero Section */
 .hero-section {
     background-color: #ffffff;
@@ -197,18 +203,24 @@
     min-height: 70vh;
     display: flex;
     align-items: center;
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100%;
 }
 
 .hero-content {
     display: flex;
     align-items: center;
-    gap: 80px;
+    gap: 60px;
     flex-wrap: wrap;
+    width: 100%;
+    max-width: 100%;
 }
 
 .hero-text {
     flex: 1;
-    min-width: 400px;
+    min-width: 0;
+    max-width: 100%;
 }
 
 .hero-badge {
@@ -238,6 +250,8 @@
     color: #333333;
     margin-bottom: 40px;
     font-weight: 600;
+    word-wrap: break-word;
+    max-width: 100%;
 }
 
 .search-container {
@@ -246,7 +260,8 @@
 
 .search-form {
     display: flex;
-    max-width: 500px;
+    max-width: 100%;
+    width: 100%;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     border-radius: 5px;
     overflow: hidden;
@@ -283,7 +298,8 @@
 
 .hero-visual {
     flex: 1;
-    min-width: 400px;
+    min-width: 0;
+    max-width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -292,14 +308,14 @@
 .world-map-image {
     position: relative;
     width: 100%;
-    max-width: 500px;
+    max-width: 100%;
     height: auto;
 }
 
 .map-image {
     width: 100%;
     height: auto;
-    max-width: 500px;
+    max-width: 100%;
     object-fit: contain;
 }
 
@@ -307,6 +323,9 @@
 .services-section {
     padding: 80px 0;
     background-color: #f8f9fa;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
 }
 
 .services-grid {
@@ -358,6 +377,9 @@
 .join-section {
     padding: 80px 0;
     background-color: #ffffff;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
 }
 
 .join-options {
@@ -430,6 +452,9 @@
 .about-section {
     padding: 80px 0;
     background-color: #f8f9fa;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
 }
 
 .about-content {
@@ -437,11 +462,14 @@
     gap: 60px;
     align-items: center;
     flex-wrap: wrap;
+    width: 100%;
+    max-width: 100%;
 }
 
 .about-text {
     flex: 1;
-    min-width: 300px;
+    min-width: 0;
+    max-width: 100%;
 }
 
 .about-text h2 {
@@ -481,7 +509,8 @@
 
 .about-image {
     flex: 1;
-    min-width: 300px;
+    min-width: 0;
+    max-width: 100%;
 }
 
 .placeholder-image {
@@ -509,6 +538,9 @@
     color: #ffffff;
     padding: 60px 0;
     text-align: center;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
 }
 
 .cta-content h2 {
@@ -523,12 +555,18 @@
     font-size: 18px;
 }
 
-/* Mobile Responsive */
-@media (max-width: 768px) {
-    .hero-content h1 {
-        font-size: 32px;
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .hero-content {
+        gap: 40px;
     }
     
+    .hero-content h1 {
+        font-size: 42px;
+    }
+}
+
+@media (max-width: 992px) {
     .hero-content {
         flex-direction: column;
         gap: 40px;
@@ -536,7 +574,36 @@
     }
     
     .hero-text {
-        min-width: auto;
+        width: 100%;
+    }
+    
+    .hero-visual {
+        width: 100%;
+    }
+    
+    .world-map-image {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-section {
+        padding: 40px 0 60px;
+    }
+    
+    .hero-content h1 {
+        font-size: 32px;
+    }
+    
+    .hero-content {
+        flex-direction: column;
+        gap: 30px;
+        text-align: center;
+    }
+    
+    .hero-text {
+        width: 100%;
+        padding: 0 15px;
     }
     
     .search-form {
@@ -547,18 +614,21 @@
     .search-input {
         border-right: 2px solid #e0e0e0;
         border-bottom: none;
+        border-radius: 5px 5px 0 0;
     }
     
     .search-btn {
         border-top: none;
+        border-radius: 0 0 5px 5px;
     }
     
     .hero-visual {
-        min-width: auto;
+        width: 100%;
+        padding: 0 15px;
     }
     
     .world-map-image {
-        max-width: 350px;
+        max-width: 100%;
     }
     
     .map-image {

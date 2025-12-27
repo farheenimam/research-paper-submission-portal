@@ -21,12 +21,6 @@
             </div>
         @endif
 
-        @if(Session::has('success'))
-            <div class="alert alert-success">
-                {{ Session::get('success') }}
-            </div>
-        @endif
-
         <form method="POST" action="{{ route('dashboard.update-paper', $paper->id) }}" enctype="multipart/form-data" class="upload-form">
             @csrf
             @method('PUT')

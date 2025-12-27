@@ -118,13 +118,6 @@ class AuthController extends Controller
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
             
-            // Set user session data
-            Session::put('user_id', $user->id);
-            Session::put('user_name', $user->name);
-            Session::put('user_email', $user->email);
-            Session::put('user_role_id', $user->role_id);
-            Session::put('login_time', now());
-            
             // Regenerate session ID for security
             $request->session()->regenerate();
             
@@ -153,12 +146,9 @@ class AuthController extends Controller
 
     function logout(){
         // Get user name before clearing session
-        $userName = Session::get('user_name', 'User');
+        $userName = Auth::user()->name ?? 'User';
         
-        // Clear all session data
-        Session::flush();
-        
-        // Logout the user
+        // Logout the user (this also clears auth session)
         Auth::logout();
         
         // Invalidate the session
