@@ -53,6 +53,9 @@ Route::middleware('auth')->group(function () {
     // Admin routes
     Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
     Route::delete('/admin/users/{id}', [AdminController::class, 'deleteUser'])->name('admin.delete-user');
+    Route::get('/admin/users/{id}', [AdminController::class, 'viewUser'])->name('admin.view-user');
+    Route::put('/admin/users/{id}', [ProfileController::class, 'update'])->name('admin.update-user');
+
     Route::delete('/admin/papers/{id}', [AdminController::class, 'deletePaper'])->name('admin.delete-paper');
     Route::delete('/admin/authors/{id}', [AdminController::class, 'deleteAuthor'])->name('admin.delete-author');
     Route::delete('/admin/categories/{id}', [AdminController::class, 'deleteCategory'])->name('admin.delete-category');

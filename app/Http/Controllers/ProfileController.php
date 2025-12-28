@@ -15,10 +15,17 @@ class ProfileController extends Controller
         return view('profile.index', compact('user'));
     }
 
-    public function update(Request $request)
+    public function update(Request $request, $id = null)
     {
-        $user = Auth::user();
+        $currentUser = Auth::user();
         
+        // If ID is provided and current user is admin, update that user
+        if ($id && $currentUser->role->name === 'admin') {
+            $user = User::findOrFail($id);
+        } else {
+            // Otherwise, user updating own profile
+            $user = $currentUser;
+        }
         $request->validate([
             'name' => 'required|string|max:150',
             'email' => 'required|email|max:150|unique:users,email,' . $user->id,
@@ -57,7 +64,13 @@ class ProfileController extends Controller
         User::where('id', $user->id)->update($updateData);
 
         Session::flash('success', 'Profile updated successfully!');
-        return redirect()->route('profile');
+        
+        // Redirect based on context
+        if ($id && $currentUser->role->name === 'admin') {
+            return redirect()->route('admin.view-user', $user->id);
+        } else {
+            return redirect()->route('profile');
+        }
     }
 
     public function removePhoto()

@@ -37,9 +37,10 @@
                                 <td>{{ $user->name }}</td>
                                 <td>{{ $user->email }}</td>
                                 <td>{{ ucfirst($user->role->name ?? 'N/A') }}</td>
-                                <td>{{ $user->affiliation ?? 'N/A' }}</td>
+                                <td>{{ Str::limit($user->affiliation ?? 'N/A', 30) }}</td>
                                 <td>{{ $user->created_at ? $user->created_at->format('M d, Y') : 'N/A' }}</td>
                                 <td class="actions-cell">
+                                <a href="{{ route('admin.view-user', $user->id) }}"  class="btn btn-primary btn-sm">View Details</a>
                                     <form method="POST" action="{{ route('admin.delete-user', $user->id) }}" onsubmit="return confirm('Are you sure you want to delete this user?');" style="display: inline;">
                                         @csrf
                                         @method('DELETE')

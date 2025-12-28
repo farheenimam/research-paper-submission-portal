@@ -149,8 +149,6 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    passwordMatch.init();
-    
     @if(isset($selectedRole))
     // Ensure role cannot be changed
     const roleInput = document.getElementById('role_display');

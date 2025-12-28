@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Paper;
 use App\Models\PaperAuthor;
 use App\Models\Category;
+use App\Models\SavedPaper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -110,6 +111,26 @@ class AdminController extends Controller
         return view('admin.view-paper', compact('paper'));
     }
 
+    public function viewUser($id){
+        // Check if user is admin
+        if (Auth::check() && Auth::user()->email !== 'farheenimam@gmail.com') {
+            abort(403, 'Unauthorized access');
+        }
+
+        $user = User::with('role')->where('id', $id)->firstOrFail();
+        if ($user->role->name === 'reseacher' || $user->role->id === 2) {
+            $papers = Paper::where('uploaded_by', $id)->with('categories', 'authors')->get();
+            // Count total times papers uploaded by this user have been saved
+            $paperIds = Paper::where('uploaded_by', $id)->pluck('id');
+            $total_saved = SavedPaper::whereIn('paper_id', $paperIds)->count();
+            return view('admin.view-user', compact('user', 'papers', 'total_saved'));
+        }
+        else{
+            $papers = SavedPaper::where('user_id', $id)->with('paper.categories', 'paper.authors')->get();
+            return view('admin.view-user', compact('user', 'papers'));
+        }
+     
+    }
     public function approvePaper(Request $request, $id)
     {
         // Check if user is admin

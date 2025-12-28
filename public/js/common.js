@@ -122,35 +122,6 @@ window.copyCitation = function() {
     }).catch(err => console.error('Failed to copy:', err));
 };
 
-// Password Match Checker (for registration page)
-window.passwordMatch = {
-    init: function() {
-        const password = document.getElementById('password');
-        const passwordConfirmation = document.getElementById('password_confirmation');
-        const messageDiv = document.getElementById('password-match-message');
-        
-        if (password && passwordConfirmation) {
-            [password, passwordConfirmation].forEach(input => {
-                input.addEventListener('input', () => this.check(password, passwordConfirmation, messageDiv));
-            });
-        }
-    },
-    
-    check: function(password, passwordConfirmation, messageDiv) {
-        if (!passwordConfirmation.value) return;
-        
-        if (password.value !== passwordConfirmation.value) {
-            if (messageDiv) {
-                messageDiv.textContent = 'Passwords do not match';
-                messageDiv.style.display = 'block';
-            }
-            passwordConfirmation.setCustomValidity('Passwords do not match');
-        } else {
-            if (messageDiv) messageDiv.style.display = 'none';
-            passwordConfirmation.setCustomValidity('');
-        }
-    }
-};
 
 // Header Navigation (Profile dropdown only)
 window.headerNav = {
