@@ -16,6 +16,8 @@
             <div class="profile-section">
                 <div class="profile-card">
                     <div class="profile-image">
+                        {{-- asset() - Generates URL for profile photo in public folder --}}
+                        {{-- asset($user->profile_photo) => http://site.com/uploads/profiles/photo.jpg --}}
                         @if($user->profile_photo)
                             <img src="{{ asset($user->profile_photo) }}" alt="{{ $user->name }}" class="profile-img">
                         @else
@@ -90,6 +92,8 @@
                             
                             <div class="paper-actions">
                                 <a href="{{ route('dashboard.view-paper', $paper->id) }}" class="btn btn-outline">View Details</a>
+                                {{-- asset() - Generates URL for PDF file --}}
+                                {{-- asset($paper->pdf_path) => http://site.com/papers/file.pdf --}}
                                 <a href="{{ asset($paper->pdf_path) }}" target="_blank" class="btn btn-outline">Download PDF</a>
                             </div>
                         </div>

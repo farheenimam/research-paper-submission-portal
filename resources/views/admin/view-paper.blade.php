@@ -30,6 +30,10 @@
                 </a>
             </div>
             <div class="pdf-preview-container">
+                {{-- PDF Display: <iframe> embeds PDF document inside the page --}}
+                {{-- asset() - Generates full URL: "papers/file.pdf" => "http://site.com/papers/file.pdf" --}}
+                {{-- Browser's built-in PDF viewer automatically renders the PDF --}}
+                {{-- #toolbar=0 - Hides PDF toolbar for cleaner display --}}
                 <iframe src="{{ asset($paper->pdf_path) }}#toolbar=0" class="pdf-iframe" frameborder="0" allowfullscreen></iframe>
             </div>
         </div>

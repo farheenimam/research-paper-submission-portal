@@ -25,11 +25,16 @@
         <div class="pdf-preview-section">
             <div class="pdf-preview-header">
                 <h2>Paper Preview</h2>
+                {{-- asset() - Generates URL for PDF file in public folder --}}
+                {{-- asset($paper->pdf_path) converts "papers/file.pdf" to full URL --}}
                 <a href="{{ asset($paper->pdf_path) }}" download class="download-btn-small" title="Download PDF">
                     <span>⬇</span>
                 </a>
             </div>
             <div class="pdf-preview-container">
+                {{-- PDF Display: <iframe> embeds PDF document inside the page --}}
+                {{-- Browser's built-in PDF viewer renders the PDF --}}
+                {{-- #toolbar=0 hides PDF toolbar for cleaner display --}}
                 <iframe src="{{ asset($paper->pdf_path) }}#toolbar=0" class="pdf-iframe" frameborder="0" allowfullscreen></iframe>
             </div>
         </div>

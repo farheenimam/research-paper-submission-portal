@@ -36,13 +36,25 @@
         <div class="pdf-preview-section">
             <div class="pdf-preview-header">
                 <h2>Paper Preview</h2>
+                {{-- asset() - Laravel helper: Generates URL for public folder files --}}
+                {{-- asset($paper->pdf_path) converts "papers/file.pdf" to "http://site.com/papers/file.pdf" --}}
+                {{-- download attribute - Forces browser to download file instead of opening --}}
                 <a href="{{ asset($paper->pdf_path) }}" download class="download-btn-small" title="Download PDF">
                     <span>⬇</span>
                 </a>
             </div>
             <div class="pdf-preview-container">
+                {{-- PDF Display Explanation: --}}
+                {{-- <iframe> - HTML tag that embeds another document (PDF) inside the page --}}
+                {{-- src="{{ asset($paper->pdf_path) }}" - Sets PDF URL as iframe source --}}
+                {{-- #toolbar=0 - PDF viewer parameter: Hides toolbar for cleaner view --}}
+                {{-- Browser automatically renders PDF using built-in PDF viewer --}}
+                {{-- If browser supports PDF viewing, it shows PDF directly in iframe --}}
+                {{-- If not supported, fallback link below will be used --}}
                 <iframe src="{{ asset($paper->pdf_path) }}#toolbar=0" class="pdf-iframe" frameborder="0" allowfullscreen></iframe>
                 <div class="pdf-fallback">
+                    {{-- Fallback: If iframe doesn't work, user can open PDF in new tab --}}
+                    {{-- asset() generates full URL so PDF opens correctly in new tab --}}
                     <p>If the PDF doesn't display, <a href="{{ asset($paper->pdf_path) }}" target="_blank">click here to open it in a new tab</a></p>
                 </div>
             </div>
@@ -96,6 +108,8 @@
 @endsection
 
 @section('styles')
+{{-- asset() - Generates URL for CSS file in public folder --}}
+{{-- asset('css/search.css') => http://site.com/css/search.css --}}
 <link href="{{ asset('css/search.css') }}" rel="stylesheet">
 @endsection
 

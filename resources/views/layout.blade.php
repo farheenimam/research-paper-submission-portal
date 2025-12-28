@@ -6,6 +6,8 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     
     <!-- Favicon -->
+    {{-- asset() - Generates URL for favicon image in public/images folder --}}
+    {{-- ?v={{ time() }} - Cache busting: Forces browser to reload image --}}
     <link rel="icon" type="image/png" href="{{ asset('images/logo.png') }}?v={{ time() }}">
     
     <link rel="stylesheet" href="css/main.css">
@@ -16,6 +18,9 @@
     <meta name="description" content="@yield('description', 'A comprehensive platform for academic research, collaboration, and knowledge sharing.')">
     
     <!-- CSS Files -->
+    {{-- asset() - Laravel helper: Generates URL for files in public folder --}}
+    {{-- asset('css/main.css') converts to: http://yoursite.com/css/main.css --}}
+    {{-- Works for CSS, JS, images, PDFs - any file in public/ directory --}}
     <link href="{{ asset('css/main.css') }}" rel="stylesheet">
     <link href="{{ asset('css/header.css') }}" rel="stylesheet">
     <link href="{{ asset('css/footer.css') }}" rel="stylesheet">
@@ -114,6 +119,8 @@
     </footer>
     
     <!-- JavaScript -->
+    {{-- asset() - Generates URL for JavaScript files in public/js folder --}}
+    {{-- asset('js/common.js') => http://site.com/js/common.js --}}
     <script src="{{ asset('js/common.js') }}"></script>
     <script src="{{ asset('js/app.js') }}"></script>
     
