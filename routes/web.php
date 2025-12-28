@@ -39,8 +39,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard/upload-paper', [DashboardController::class, 'uploadPaper'])->name('dashboard.upload-paper');
     Route::post('/dashboard/upload-paper', [DashboardController::class, 'storePaper'])->name('dashboard.store-paper');
     Route::get('/dashboard/paper/{id}', [DashboardController::class, 'viewPaper'])->name('dashboard.view-paper');
-    Route::get('/dashboard/paper/{id}/edit', [DashboardController::class, 'editPaper'])->name('dashboard.edit-paper');
-    Route::put('/dashboard/paper/{id}', [DashboardController::class, 'updatePaper'])->name('dashboard.update-paper');
     
     // Profile routes
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');

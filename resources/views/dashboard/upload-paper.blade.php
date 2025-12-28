@@ -88,23 +88,18 @@
 
             <!-- Authors Information -->
             <div class="form-section">
-                <h3>Authors Information</h3>
-                <p class="section-description">Add all authors who contributed to this research paper.</p>
+                <h3>Author Information</h3>
+                <p class="section-description">You are the author of this research paper.</p>
                 
                 <div id="authors-container">
-                    <div class="author-entry" data-author-index="0">
-                        <div class="author-header">
-                            <h4>Author 1</h4>
-                            <button type="button" class="remove-author" onclick="if(window.authorManagement) authorManagement.removeAuthor(0)" style="display: none;">Remove</button>
-                        </div>
-                        
+                    <div class="author-entry">
                         <div class="author-fields">
                             <div class="form-group">
                                 <label class="form-label">Author Name <span class="required">*</span></label>
                                 <input type="text" name="authors[0][name]" class="form-control" 
                                        placeholder="Full name of the author" 
                                        value="{{ old('authors.0.name', Auth::user()->name) }}" required maxlength="150" readonly>
-                                <div class="help-text">This is automatically set to your name (Author 1)</div>
+                                <div class="help-text">This is automatically set to your name</div>
                             </div>
                             
                             <div class="form-group">
@@ -131,8 +126,6 @@
                         </div>
                     </div>
                 </div>
-                
-                <button type="button" id="add-author" class="btn btn-outline">Add Another Author</button>
             </div>
 
             <!-- Submit Section -->
@@ -150,11 +143,5 @@
 @endsection
 
 @section('scripts')
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    if (window.authorManagement) {
-        authorManagement.init(1);
-    }
-});
-</script>
+{{-- Author management scripts removed - only one author (logged-in user) allowed --}}
 @endsection

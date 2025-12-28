@@ -52,10 +52,13 @@ class ProfileController extends Controller
             $filename = time() . '_' . $profilePhoto->getClientOriginalName();
             
             // Ensure the directory exists
-            if (!file_exists(public_path('uploads/profiles'))) {
+            if (!file_exists(public_path('uploads/profiles'))) { // 0755 is the permission for the directory
                 mkdir(public_path('uploads/profiles'), 0755, true);
             }
-            
+//             0 → octal number (permission format)
+// 7 (Owner) → read + write + execute
+// 5 (Group) → read + execute
+// 5 (Others) → read + execute
             $profilePhoto->move(public_path('uploads/profiles'), $filename);
             $updateData['profile_photo'] = 'uploads/profiles/' . $filename;
         }
@@ -77,7 +80,14 @@ class ProfileController extends Controller
     {
         $user = Auth::user();
         
+        // Check if user has a profile photo and if the file exists on server
+        // $user->profile_photo - Contains relative path like "uploads/profiles/photo.jpg"
+        // public_path($user->profile_photo) - Converts relative path to full server path
+        // Example: "uploads/profiles/photo.jpg" => "C:\...\public\uploads\profiles\photo.jpg"
+        // file_exists() - Checks if the file actually exists on the server
         if ($user->profile_photo && file_exists(public_path($user->profile_photo))) {
+            // unlink() - Deletes the file from server
+            // public_path($user->profile_photo) - Full path to the file that needs to be deleted
             unlink(public_path($user->profile_photo));
         }
 

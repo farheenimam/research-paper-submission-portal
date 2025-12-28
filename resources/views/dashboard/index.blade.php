@@ -81,7 +81,6 @@
                             
                             <div class="paper-meta">
                                 <p class="publication-year">📅 {{ $paper->publication_year }}</p>
-                                <p class="authors-count">👥 {{ $paper->authors->count() }} Author(s)</p>
                                 <p class="upload-date">📤 {{ $paper->created_at->format('M d, Y') }}</p>
                             </div>
                             
