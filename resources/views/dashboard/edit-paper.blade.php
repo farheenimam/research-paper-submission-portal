@@ -37,8 +37,8 @@
                            required 
                            minlength="5"
                            maxlength="255"
-                           pattern=".{5,255}"
-                           title="Title must be between 5 and 255 characters">
+                           pattern="(?=.*[A-Za-z]).{5,255}"
+                           title="Title must be between 5 and 255 characters and contain at least one letter">
                 </div>
 
                 <div class="form-group">

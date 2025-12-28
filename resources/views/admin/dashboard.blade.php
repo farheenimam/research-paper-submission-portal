@@ -184,8 +184,8 @@
                                    required 
                                    minlength="5"
                                    maxlength="255"
-                                   pattern=".{5,255}"
-                                   title="Title must be between 5 and 255 characters">
+                                   pattern="(?=.*[A-Za-z]).{5,255}"
+                                   title="Title must be between 5 and 255 characters and contain at least one letter">
                         </div>
                         <div class="form-group" style="grid-column: 1 / -1;">
                             <label>Abstract *</label>
@@ -366,8 +366,9 @@
                                 <td>{{ $paper->publication_year }}</td>
                                 <td>{{ $paper->created_at ? $paper->created_at->format('M d, Y') : 'N/A' }}</td>
                                 <td class="actions-cell">
-                                    <button type="button" class="btn btn-primary btn-sm" onclick="adminForms.toggleEdit('paper', {{ $paper->id }})">Update</button>
-                                    <form method="POST" action="{{ route('admin.delete-paper', $paper->id) }}" onsubmit="return confirm('Are you sure you want to delete this paper?');">
+                                    <a href="{{ route('admin.view-paper', $paper->id) }}" class="btn btn-primary btn-sm">View Details</a>
+                                    <button type="button" class="btn btn-outline btn-sm" onclick="var f=document.getElementById('edit-paper-form-{{ $paper->id }}');f.style.display=f.style.display==='none'?'block':'none'">Update</button>
+                                    <form method="POST" action="{{ route('admin.delete-paper', $paper->id) }}" onsubmit="return confirm('Are you sure you want to delete this paper?');" style="display: inline;">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-danger btn-sm">Delete</button>
@@ -604,219 +605,9 @@
 </div>
 
 {{-- Admin form toggle functions are now in common.js --}}
+@endsection
 
-<style>
-.admin-dashboard {
-    padding: 40px 0;
-    min-height: calc(100vh - 200px);
-    background-color: #f8f9fa;
-    scroll-behavior: smooth;
-}
-
-.admin-header {
-    text-align: center;
-    margin-bottom: 40px;
-}
-
-.admin-header h1 {
-    color: #2d5016;
-    font-size: 36px;
-    margin-bottom: 10px;
-}
-
-.admin-section {
-    background: #ffffff;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    margin-bottom: 30px;
-    scroll-margin-top: 100px;
-}
-
-.section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.section-header h2 {
-    color: #2d5016;
-    font-size: 24px;
-}
-
-.table-responsive {
-    overflow-x: auto;
-}
-
-.admin-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-}
-
-.admin-table th,
-.admin-table td {
-    padding: 12px;
-    text-align: left;
-    border-bottom: 1px solid #e0e0e0;
-}
-
-.admin-table th {
-    background-color: #2d5016;
-    color: #ffffff;
-    font-weight: 600;
-}
-
-.admin-table tr:hover {
-    background-color: #f8f9fa;
-}
-
-.admin-table td:last-child {
-    white-space: nowrap;
-}
-
-.admin-table .actions-cell {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
-}
-
-.admin-table .actions-cell form {
-    margin: 0;
-    display: inline-block;
-}
-
-.status-badge {
-    padding: 4px 12px;
-    border-radius: 12px;
-    font-size: 12px;
-    font-weight: 600;
-    display: inline-block;
-}
-
-.status-pending {
-    background-color: #fff3cd;
-    color: #856404;
-}
-
-.status-approved {
-    background-color: #d4edda;
-    color: #155724;
-}
-
-.status-rejected {
-    background-color: #f8d7da;
-    color: #721c24;
-}
-
-.add-form, .edit-form {
-    background: #f8f9fa;
-    padding: 20px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    border: 2px solid #2d5016;
-}
-
-.edit-form {
-    background: #fff9e6;
-    border-color: #ffc107;
-}
-
-.form-row {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 15px;
-    align-items: end;
-}
-
-.form-group {
-    display: flex;
-    flex-direction: column;
-}
-
-.form-group label {
-    font-weight: 600;
-    color: #2d5016;
-    margin-bottom: 5px;
-    font-size: 14px;
-}
-
-.form-control {
-    padding: 10px;
-    border: 2px solid #e0e0e0;
-    border-radius: 6px;
-    font-size: 14px;
-}
-
-.form-control:focus {
-    outline: none;
-    border-color: #2d5016;
-}
-
-.btn-sm {
-    padding: 6px 12px;
-    font-size: 12px;
-    margin: 0 2px;
-    display: inline-block;
-}
-
-.btn-primary {
-    background-color: #2d5016;
-    color: #ffffff;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.btn-primary:hover {
-    background-color: #1f350f;
-}
-
-.btn-danger {
-    background-color: #dc3545;
-    color: #ffffff;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.btn-danger:hover {
-    background-color: #c82333;
-}
-
-.btn-outline {
-    background-color: transparent;
-    color: #2d5016;
-    border: 2px solid #2d5016;
-    padding: 8px 16px;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.btn-outline:hover {
-    background-color: #2d5016;
-    color: #ffffff;
-}
-
-.alert {
-    padding: 15px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-}
-
-.alert-success {
-    background-color: #d4edda;
-    color: #155724;
-    border: 1px solid #c3e6cb;
-}
-</style>
+@section('styles')
+<link href="{{ asset('css/admin.css') }}" rel="stylesheet">
 @endsection
 

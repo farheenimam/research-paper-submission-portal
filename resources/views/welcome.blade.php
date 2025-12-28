@@ -99,21 +99,6 @@
                 <a href="{{ route('registration') }}?role=researcher" class="btn btn-primary">Join as Researcher</a>
             </div>
             
-            <!-- Join as Reviewer -->
-            <div class="join-card reviewer-card">
-                <div class="join-icon">📋</div>
-                <h3>Join as a Reviewer</h3>
-                <p>Help maintain research quality through peer review.</p>
-                
-                <div class="benefits-list">
-                    <div class="benefit-item">✓ Review research papers</div>
-                    <div class="benefit-item">✓ Shape research standards</div>
-                    <div class="benefit-item">✓ Academic recognition</div>
-                </div>
-                
-                <a href="{{ route('registration') }}?role=reviewer" class="btn btn-outline">Join as Reviewer</a>
-            </div>
-            
             <!-- Join as Reader -->
             <div class="join-card reader-card">
                 <div class="join-icon">📚</div>
@@ -138,7 +123,7 @@
         <div class="about-content">
             <div class="about-text">
                 <h2>About Research Portal</h2>
-                <p>Research Portal is a comprehensive platform designed to facilitate academic research, collaboration, and knowledge sharing. We connect researchers, reviewers, and academic institutions worldwide to advance scientific discovery and innovation.</p>
+                <p>Research Portal is a comprehensive platform designed to facilitate academic research, collaboration, and knowledge sharing. We connect researchers and academic institutions worldwide to advance scientific discovery and innovation.</p>
                 
                 <div class="about-stats">
                     <div class="stat-item">
@@ -148,10 +133,6 @@
                     <div class="stat-item">
                         <div class="stat-number">5,000+</div>
                         <div class="stat-label">Researchers</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number">2,500+</div>
-                        <div class="stat-label">Reviewers</div>
                     </div>
                     <div class="stat-item">
                         <div class="stat-number">100+</div>
@@ -172,14 +153,42 @@
     </div>
 </section>
 
+<!-- Support Section -->
+<section id="support" class="support-section">
+    <div class="container">
+        <h2 class="text-center mb-20">Support & Help</h2>
+        <div class="support-content">
+            <div class="support-grid">
+                <div class="support-card">
+                    <h3>Help Center</h3>
+                    <p>Find answers to frequently asked questions and get help with common issues.</p>
+                    <a href="#" class="support-link">Visit Help Center →</a>
+                </div>
+                
+                <div class="support-card">
+                    <h3>Documentation</h3>
+                    <p>Comprehensive guides and documentation to help you get started.</p>
+                    <a href="#" class="support-link">View Documentation →</a>
+                </div>
+                
+                <div class="support-card">
+                    <h3>Contact Us</h3>
+                    <p>Need additional assistance? Reach out to our support team.</p>
+                    <a href="#" class="support-link">Contact Support →</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 <!-- Call to Action Section -->
 <section class="cta-section">
     <div class="container">
         <div class="cta-content">
             <h2>Ready to Start Your Research Journey?</h2>
-            <p>Join thousands of researchers and reviewers who are already part of our community.</p>
+            <p>Join thousands of researchers who are already part of our community.</p>
             @guest
-                <a href="#join-us" class="btn btn-primary">Get Started Today</a>
+                <a href="{{ route('welcome') }}#join-us" class="btn btn-primary">Get Started Today</a>
             @else
                 <a href="{{ route('dashboard') }}" class="btn btn-primary">Explore Dashboard</a>
             @endguest
@@ -189,342 +198,5 @@
 @endsection
 
 @section('styles')
-<style>
-
-/* Hero Section */
-.hero-section {
-    background-color: #ffffff;
-    padding: 60px 0 80px;
-    min-height: 70vh;
-    display: flex;
-    align-items: center;
-    width: 100%;
-}
-
-.hero-content {
-    display: flex;
-    align-items: center;
-    gap: 60px;
-    flex-wrap: wrap;
-    width: 100%;
-}
-
-.hero-text {
-    flex: 1;
-}
-
-.hero-badge {
-    display: flex;
-    align-items: center;
-    margin-bottom: 30px;
-}
-
-.badge-line {
-    width: 40px;
-    height: 3px;
-    background-color: #4a7c2a;
-    margin-right: 15px;
-}
-
-.badge-text {
-    color: #666666;
-    font-size: 14px;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.hero-content h1 {
-    font-size: 48px;
-    line-height: 1.2;
-    color: #333333;
-    margin-bottom: 40px;
-    font-weight: 600;
-    word-wrap: break-word;
-    max-width: 100%;
-}
-
-.search-container {
-    margin-bottom: 40px;
-}
-
-.search-form {
-    display: flex;
-    width: 100%;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    border-radius: 5px;
-    overflow: hidden;
-}
-
-.search-input {
-    flex: 1;
-    padding: 15px 20px;
-    border: 2px solid #e0e0e0;
-    border-right: none;
-    font-size: 16px;
-    outline: none;
-    background-color: #ffffff;
-}
-
-.search-input:focus {
-    border-color: #2d5016;
-}
-
-.search-btn {
-    background-color: #2d5016;
-    color: #ffffff;
-    border: none;
-    padding: 15px 25px;
-    font-size: 14px;
-    font-weight: bold;
-    cursor: pointer;
-    letter-spacing: 1px;
-}
-
-.search-btn:hover {
-    background-color: #1a3009;
-}
-
-.hero-visual {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.world-map-image {
-    position: relative;
-    width: 100%;
-    height: auto;
-}
-
-.map-image {
-    width: 100%;
-    height: auto;
-    max-width: 100%;
-    object-fit: contain;
-}
-
-/* Services Section */
-.services-section {
-    padding: 80px 0;
-    background-color: #f8f9fa;
-    width: 100%;
-}
-
-.services-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 30px;
-    justify-content: center;
-}
-
-.service-card {
-    background: #ffffff;
-    padding: 40px 30px;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    text-align: center;
-    flex: 1;
-    min-width: 250px;
-}
-
-.service-icon {
-    font-size: 48px;
-    margin-bottom: 20px;
-}
-
-.service-card h3 {
-    color: #2d5016;
-    margin-bottom: 15px;
-    font-size: 24px;
-}
-
-.service-card p {
-    color: #666666;
-    margin-bottom: 20px;
-    line-height: 1.6;
-}
-
-.service-link {
-    color: #2d5016;
-    font-weight: bold;
-    text-decoration: none;
-}
-
-.service-link:hover {
-    color: #4a7c2a;
-}
-
-/* Join Section */
-.join-section {
-    padding: 80px 0;
-    background-color: #ffffff;
-    width: 100%;
-}
-
-.join-options {
-    display: flex;
-    gap: 25px;
-    justify-content: center;
-    flex-wrap: wrap;
-}
-
-.join-card {
-    background: #ffffff;
-    border: 2px solid #e0e0e0;
-    border-radius: 12px;
-    padding: 25px 20px;
-    text-align: center;
-    flex: 1;
-    min-width: 280px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.join-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-}
-
-.researcher-card {
-    border-color: #2d5016;
-}
-
-.reviewer-card {
-    border-color: #4a7c2a;
-}
-
-.reader-card {
-    border-color: #6c757d;
-}
-
-.join-icon {
-    font-size: 48px;
-    margin-bottom: 15px;
-}
-
-.join-card h3 {
-    color: #2d5016;
-    margin-bottom: 10px;
-    font-size: 22px;
-}
-
-.join-card p {
-    color: #666666;
-    margin-bottom: 20px;
-    line-height: 1.5;
-    font-size: 14px;
-}
-
-.benefits-list {
-    text-align: left;
-    margin-bottom: 20px;
-}
-
-.benefit-item {
-    color: #333333;
-    margin-bottom: 8px;
-    padding-left: 8px;
-    font-size: 13px;
-}
-
-/* About Section */
-.about-section {
-    padding: 80px 0;
-    background-color: #f8f9fa;
-    width: 100%;
-}
-
-.about-content {
-    display: flex;
-    gap: 60px;
-    align-items: center;
-    flex-wrap: wrap;
-    width: 100%;
-}
-
-.about-text {
-    flex: 1;
-}
-
-.about-text h2 {
-    color: #2d5016;
-    margin-bottom: 20px;
-    font-size: 36px;
-}
-
-.about-text p {
-    color: #666666;
-    margin-bottom: 40px;
-    line-height: 1.6;
-    font-size: 18px;
-}
-
-.about-stats {
-    display: flex;
-    gap: 30px;
-    flex-wrap: wrap;
-}
-
-.stat-item {
-    text-align: center;
-}
-
-.stat-number {
-    font-size: 32px;
-    font-weight: bold;
-    color: #2d5016;
-    margin-bottom: 5px;
-}
-
-.stat-label {
-    color: #666666;
-    font-size: 14px;
-}
-
-.about-image {
-    flex: 1;
-}
-
-.placeholder-image {
-    background-color: #2d5016;
-    border-radius: 15px;
-    height: 300px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #ffffff;
-}
-
-.image-content {
-    text-align: center;
-}
-
-.image-icon {
-    font-size: 64px;
-    margin-bottom: 15px;
-}
-
-/* CTA Section */
-.cta-section {
-    background-color: #2d5016;
-    color: #ffffff;
-    padding: 60px 0;
-    text-align: center;
-    width: 100%;
-}
-
-.cta-content h2 {
-    color: #ffffff;
-    margin-bottom: 15px;
-    font-size: 36px;
-}
-
-.cta-content p {
-    color: rgba(255, 255, 255, 0.9);
-    margin-bottom: 30px;
-    font-size: 18px;
-}
-
-</style>
+<link href="{{ asset('css/welcome.css') }}" rel="stylesheet">
 @endsection

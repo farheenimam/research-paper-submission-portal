@@ -6,7 +6,6 @@ use App\Models\User;
 use App\Models\Paper;
 use App\Models\PaperAuthor;
 use App\Models\Category;
-use App\Models\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -129,7 +128,7 @@ class AdminController extends Controller
         }
 
         $request->validate([
-            'title' => 'required|string|max:255',
+            'title' => 'required|string|max:255|regex:/.*[A-Za-z].*/',
             'abstract' => 'required|string',
             'pdf_file' => 'required|file|mimes:pdf|max:10240', // 10MB max
             'publication_year' => 'required|integer|min:1900|max:' . (date('Y') + 1),
@@ -182,7 +181,7 @@ class AdminController extends Controller
         $paper = Paper::findOrFail($id);
 
         $request->validate([
-            'title' => 'required|string|max:255',
+            'title' => 'required|string|max:255|regex:/.*[A-Za-z].*/',
             'abstract' => 'required|string',
             'pdf_file' => 'nullable|file|mimes:pdf|max:10240', // 10MB max, optional for update
             'publication_year' => 'required|integer|min:1900|max:' . (date('Y') + 1),
@@ -338,6 +337,65 @@ class AdminController extends Controller
         ]);
 
         Session::flash('success', 'Category updated successfully!');
+        return redirect()->route('admin.dashboard');
+    }
+
+    // Paper Review Management (Admin can approve/reject papers)
+    public function viewPaper($id)
+    {
+        // Check if user is admin
+        if (Auth::check() && Auth::user()->email !== 'farheenimam@gmail.com') {
+            abort(403, 'Unauthorized access');
+        }
+
+        $paper = Paper::with([
+            'authors' => function($query) {
+                $query->orderBy('id', 'asc');
+            },
+            'uploader', 
+            'categories'
+        ])
+        ->where('id', $id)
+        ->firstOrFail();
+        
+        return view('admin.view-paper', compact('paper'));
+    }
+
+    public function approvePaper(Request $request, $id)
+    {
+        // Check if user is admin
+        if (Auth::check() && Auth::user()->email !== 'farheenimam@gmail.com') {
+            abort(403, 'Unauthorized access');
+        }
+
+        $paper = Paper::findOrFail($id);
+        $user = Auth::user();
+
+        // Update paper status to approved
+        $paper->status = 'approved';
+        $paper->approved_by = $user->id;
+        $paper->save();
+
+        Session::flash('success', 'Paper approved successfully!');
+        return redirect()->route('admin.dashboard');
+    }
+
+    public function rejectPaper(Request $request, $id)
+    {
+        // Check if user is admin
+        if (Auth::check() && Auth::user()->email !== 'farheenimam@gmail.com') {
+            abort(403, 'Unauthorized access');
+        }
+
+        $paper = Paper::findOrFail($id);
+        $user = Auth::user();
+
+        // Update paper status to rejected
+        $paper->status = 'rejected';
+        $paper->approved_by = $user->id;
+        $paper->save();
+
+        Session::flash('success', 'Paper rejected successfully!');
         return redirect()->route('admin.dashboard');
     }
 }

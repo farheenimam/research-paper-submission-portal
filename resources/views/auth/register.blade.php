@@ -8,9 +8,9 @@
     <div class="auth-card">
         <div class="auth-header">
             <h2>Create Account</h2>
-            <p>Join our community of researchers and reviewers</p>
+            <p>Join our community of researchers</p>
         </div>
-        
+
         @if(session('error'))
             <div class="alert alert-error">
                 {{ session('error') }}

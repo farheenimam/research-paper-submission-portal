@@ -1,7 +1,7 @@
 @extends('layout')
 
-@section('title', $paper->title . ' - Research Portal')
-@section('description', 'View details of your research paper: ' . $paper->title)
+@section('title', $paper->title . ' - Admin Review')
+@section('description', 'Review and manage research paper: ' . $paper->title)
 
 @section('styles')
 <link href="{{ asset('css/dashboard.css') }}" rel="stylesheet">
@@ -12,7 +12,7 @@
 <div class="dashboard-container">
     <div class="container">
         <div class="breadcrumb">
-            <a href="{{ route('dashboard') }}">Dashboard</a> > Paper Details
+            <a href="{{ route('admin.dashboard') }}">Admin Dashboard</a> > Paper Details
         </div>
         
         <div class="review-header">
@@ -40,19 +40,18 @@
                 <div class="info-grid">
                     <div class="info-item"><strong>Publication Year:</strong> {{ $paper->publication_year }}</div>
                     <div class="info-item"><strong>Uploaded:</strong> {{ $paper->created_at->format('M d, Y') }}</div>
-                    <div class="info-item"><strong>Status:</strong> <span class="status-badge status-{{ $paper->status }}">{{ ucfirst($paper->status) }}</span></div>
-                    <div class="info-item"><strong>Total Authors:</strong> {{ $paper->authors->count() }}</div>
+                    <div class="info-item"><strong>Uploaded By:</strong> {{ $paper->uploader->name ?? 'N/A' }}</div>
+                    <div class="info-item"><strong>Category:</strong> 
+                        @foreach($paper->categories as $category)
+                            {{ $category->name }}@if(!$loop->last), @endif
+                        @endforeach
+                    </div>
                 </div>
             </div>
 
             <div class="info-card">
-                <h3>Abstract</h3>
-                <p>{{ $paper->abstract }}</p>
-            </div>
-
-            <div class="info-card">
                 <h3>Authors</h3>
-                @foreach($paper->authors as $index => $author)
+                @foreach($paper->authors as $author)
                     <div class="author-item">
                         <div class="author-name">{{ $author->author_name }}</div>
                         @if($author->author_email)
@@ -65,29 +64,44 @@
                 @endforeach
             </div>
 
-            @if($paper->status === 'pending')
-                <div class="status-info">
-                    <p><strong>Your paper is under review</strong></p>
-                    <p>You will be notified once the review process is complete.</p>
-                </div>
-            @elseif($paper->status === 'approved')
-                <div class="status-info success">
-                    <p><strong>Congratulations!</strong></p>
-                    <p>Your paper has been approved and is now published.</p>
-                </div>
-            @elseif($paper->status === 'rejected')
-                <div class="status-info error">
-                    <p><strong>Paper Rejected</strong></p>
-                    <p>Please review the feedback and consider resubmitting with revisions.</p>
-                </div>
-            @endif
+            <div class="info-card">
+                <h3>Abstract</h3>
+                <p>{{ $paper->abstract }}</p>
+            </div>
 
-            <div class="text-center mt-20">
-                <a href="{{ route('dashboard') }}" class="btn btn-outline">
-                    ← Back to Dashboard
-                </a>
+        </div>
+
+        <div class="admin-actions-sidebar">
+            <div class="card">
+                <h3>Admin Actions</h3>
+                
+                @if($paper->status == 'pending')
+                    <form action="{{ route('admin.approve-paper', $paper->id) }}" method="POST" class="review-form">
+                        @csrf
+                        @method('PUT')
+                        <button type="submit" class="btn btn-success btn-full">Approve Paper</button>
+                    </form>
+
+                    <form action="{{ route('admin.reject-paper', $paper->id) }}" method="POST" class="review-form">
+                        @csrf
+                        @method('PUT')
+                        <button type="submit" class="btn btn-danger btn-full">Reject Paper</button>
+                    </form>
+                @else
+                    <div class="status-info">
+                        <p><strong>Status:</strong> {{ ucfirst($paper->status) }}</p>
+                        @if($paper->approved_by)
+                            <p><strong>Reviewed by:</strong> {{ \App\Models\User::find($paper->approved_by)->name ?? 'Admin' }}</p>
+                        @endif
+                    </div>
+                @endif
+
+                <div class="mt-20">
+                    <a href="{{ route('admin.dashboard') }}" class="btn btn-outline btn-full">Back to Dashboard</a>
+                </div>
             </div>
         </div>
     </div>
 </div>
 @endsection
+

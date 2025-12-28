@@ -36,14 +36,6 @@ class Paper extends Model
     }
 
     /**
-     * Get the comments for the paper.
-     */
-    public function comments()
-    {
-        return $this->hasMany(Comment::class);
-    }
-
-    /**
      * Get the user who approved the paper.
      */
     public function approver()

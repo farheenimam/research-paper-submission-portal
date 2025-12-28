@@ -6,7 +6,6 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\PaperController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\ReviewerController;
 use App\Http\Controllers\AdminController;
 
 Route::get('/', function () {
@@ -15,16 +14,8 @@ Route::get('/', function () {
         if (auth()->user()->email === 'farheenimam@gmail.com') {
             return redirect()->route('admin.dashboard');
         }
-        // Redirect reviewers (role_id 3) to articles page
-        if (auth()->user()->role_id == 3) {
-            return redirect()->route('reviewer.articles');
-        }
-        // Redirect readers (role_id 4) to search page
-        if (auth()->user()->role_id == 4) {
-            return redirect()->route('search');
-        }
-        // Redirect other users to recent papers
-        return redirect()->route('paper.recent');
+        // Redirect all users to search page
+        return redirect()->route('search');
     }
     return view('welcome');
 })->name('welcome');
@@ -41,7 +32,6 @@ Route::post('/search/save/{id}', [SearchController::class, 'savePaper'])->name('
 
 // Public paper view
 Route::get('/paper/{id}', [PaperController::class, 'view'])->name('paper.view');
-Route::get('/recent', [PaperController::class, 'recent'])->name('paper.recent');
 
 // Dashboard routes (protected)
 Route::middleware('auth')->group(function () {
@@ -56,12 +46,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile/photo', [ProfileController::class, 'removePhoto'])->name('profile.remove-photo');
-    
-    // Reviewer routes
-    Route::get('/reviewer/articles', [ReviewerController::class, 'articles'])->name('reviewer.articles');
-    Route::get('/reviewer/history', [ReviewerController::class, 'history'])->name('reviewer.history');
-    Route::get('/reviewer/review/{id}', [ReviewerController::class, 'review'])->name('reviewer.review');
-    Route::put('/reviewer/review/{id}', [ReviewerController::class, 'updateReview'])->name('reviewer.update-review');
     
     // Reader routes
     Route::get('/reader/saved-papers', [SearchController::class, 'savedPapers'])->name('reader.saved-papers');
@@ -80,4 +64,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/admin/categories', [AdminController::class, 'storeCategory'])->name('admin.store-category');
     Route::put('/admin/categories/{id}', [AdminController::class, 'updateCategory'])->name('admin.update-category');
     Route::delete('/admin/categories/{id}', [AdminController::class, 'deleteCategory'])->name('admin.delete-category');
+    
+    // Admin paper review routes
+    Route::get('/admin/paper/{id}', [AdminController::class, 'viewPaper'])->name('admin.view-paper');
+    Route::put('/admin/paper/{id}/approve', [AdminController::class, 'approvePaper'])->name('admin.approve-paper');
+    Route::put('/admin/paper/{id}/reject', [AdminController::class, 'rejectPaper'])->name('admin.reject-paper');
 });

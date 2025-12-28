@@ -30,9 +30,7 @@ class AuthController extends Controller
             
             // If not found by name, try to find by ID
             if (!$selectedRole) {
-                if ($roleName === 'reviewer') {
-                    $selectedRole = \App\Models\Role::find(3);
-                } elseif ($roleName === 'reader') {
+                if ($roleName === 'reader') {
                     $selectedRole = \App\Models\Role::find(4);
                 } elseif ($roleName === 'researcher') {
                     // Try to find researcher by name or common ID
@@ -129,10 +127,7 @@ class AuthController extends Controller
             }
             
             // Redirect based on role
-            if ($user->role_id == 3) {
-                // Reviewers go to articles page
-                return redirect()->route('reviewer.articles');
-            } elseif ($user->role_id == 4) {
+            if ($user->role_id == 4) {
                 // Readers go to search page
                 return redirect()->route('search');
             }

@@ -19,13 +19,18 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="#services" class="nav-link">
+                        <a href="{{ route('welcome') }}#services" class="nav-link">
                             Services
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="#about" class="nav-link">
+                        <a href="{{ route('welcome') }}#about" class="nav-link">
                             About
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('welcome') }}#support" class="nav-link">
+                            Support
                         </a>
                     </li>
                     <li class="nav-item">
@@ -75,21 +80,12 @@
                                 Search
                             </a>
                         </li>
-                    @elseif(Auth::user()->role_id == 3)
-                        <!-- Articles link for reviewers (role_id 3) -->
-                        <li class="nav-item">
-                            <a href="{{ route('reviewer.articles') }}" class="nav-link {{ request()->routeIs('reviewer.articles') ? 'active' : '' }}">
-                                Articles
-                            </a>
-                        </li>
                     @else
-                        <!-- Recent research work link for non-reviewers -->
                         <li class="nav-item">
-                            <a href="{{ route('paper.recent') }}" class="nav-link {{ request()->routeIs('paper.recent') ? 'active' : '' }}">
-                                Recent research work
+                            <a href="{{ route('search') }}" class="nav-link {{ request()->routeIs('search') ? 'active' : '' }}">
+                                Search Papers
                             </a>
                         </li>
-                        <!-- My Research link for non-reviewers -->
                         <li class="nav-item">
                             <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard*') ? 'active' : '' }}">
                                 My Research
@@ -113,31 +109,25 @@
                         
                         <div class="profile-dropdown" id="profileDropdown">
                             <a href="{{ route('profile') }}" class="dropdown-item">
-                                👤 My Profile
+                                My Profile
                             </a>
                             @if(Auth::user()->email === 'farheenimam@gmail.com')
-                                <!-- Admin user - no additional dropdown items -->
+                                <!-- Admin can manage everything from dashboard -->
                             @elseif(Auth::user()->role_id == 4)
                                 <a href="{{ route('reader.saved-papers') }}" class="dropdown-item">
-                                    📄 Saved Papers
-                                </a>
-                            @elseif(Auth::user()->role_id == 3)
-                                <a href="{{ route('reviewer.history') }}" class="dropdown-item">
-                                    📄 My History
+                                    Saved Papers
                                 </a>
                             @else
                                 <a href="{{ route('dashboard.upload-paper') }}" class="dropdown-item">
-                                    📤 Upload Research
+                                    Upload Research
                                 </a>
                             @endif
                             <div class="dropdown-divider"></div>
-                            <a href="{{ route('logout') }}" class="dropdown-item" 
-                               onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                🚪 Logout
-                            </a>
-                            
-                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                            <form action="{{ route('logout') }}" method="POST" style="display: inline; margin: 0; padding: 0;">
                                 @csrf
+                                <button type="submit" class="dropdown-item" style="width: 100%; text-align: left; background: none; border: none; padding: 12px 15px; color: #333333; text-decoration: none; cursor: pointer; font-size: inherit; font-family: inherit;">
+                                    Logout
+                                </button>
                             </form>
                         </div>
                     </li>

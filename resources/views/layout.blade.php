@@ -12,7 +12,9 @@
     <meta name="description" content="@yield('description', 'A comprehensive platform for academic research, collaboration, and knowledge sharing.')">
     
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
+    <link rel="icon" type="image/png" href="{{ asset('images/logo.png') }}">
+    <link rel="shortcut icon" type="image/png" href="{{ asset('images/logo.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('images/logo.png') }}">
     
     <!-- CSS Files -->
     <link href="{{ asset('css/main.css') }}" rel="stylesheet">

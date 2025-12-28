@@ -15,10 +15,6 @@ class DashboardController extends Controller
     {
         $user = Auth::user();
         
-        // Redirect reviewers (role_id 3) to articles page
-        if ($user->role_id == 3) {
-            return redirect()->route('reviewer.articles');
-        }
         
         $papers = Paper::where('uploaded_by', $user->id)
                       ->with('authors')
@@ -37,7 +33,7 @@ class DashboardController extends Controller
     public function storePaper(Request $request)
     {
         $request->validate([
-            'title' => 'required|string|max:255',
+            'title' => 'required|string|max:255|regex:/.*[A-Za-z].*/',
             'abstract' => 'required|string',
             'pdf_file' => 'required|file|mimes:pdf|max:10240', // 10MB max
             'publication_year' => 'required|integer|min:1900|max:' . (date('Y') + 1),
@@ -102,7 +98,7 @@ class DashboardController extends Controller
 
     public function viewPaper($id)
     {
-        $paper = Paper::with(['authors', 'uploader', 'comments.user'])
+        $paper = Paper::with(['authors', 'uploader'])
                      ->where('id', $id)
                      ->where('uploaded_by', Auth::id())
                      ->firstOrFail();
@@ -129,7 +125,7 @@ class DashboardController extends Controller
                      ->firstOrFail();
 
         $request->validate([
-            'title' => 'required|string|max:255',
+            'title' => 'required|string|max:255|regex:/.*[A-Za-z].*/',
             'abstract' => 'required|string',
             'publication_year' => 'required|integer|min:1900|max:' . (date('Y') + 1),
             'category_id' => 'required|exists:categories,id',

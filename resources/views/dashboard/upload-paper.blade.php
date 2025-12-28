@@ -36,8 +36,8 @@
                            required 
                            minlength="5"
                            maxlength="255"
-                           pattern=".{5,255}"
-                           title="Title must be between 5 and 255 characters">
+                           pattern="(?=.*[A-Za-z]).{5,255}"
+                           title="Title must be between 5 and 255 characters and contain at least one letter">
                 </div>
 
                 <div class="form-group">
@@ -95,7 +95,7 @@
                     <div class="author-entry" data-author-index="0">
                         <div class="author-header">
                             <h4>Author 1</h4>
-                            <button type="button" class="remove-author" onclick="authorManagement.removeAuthor(0)" style="display: none;">Remove</button>
+                            <button type="button" class="remove-author" onclick="if(window.authorManagement) authorManagement.removeAuthor(0)" style="display: none;">Remove</button>
                         </div>
                         
                         <div class="author-fields">
@@ -152,86 +152,9 @@
 @section('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    authorManagement.init(1);
-});
-</script>
-@endsection
-    const container = document.getElementById('authors-container');
-    const newAuthor = document.createElement('div');
-    newAuthor.className = 'author-entry';
-    newAuthor.setAttribute('data-author-index', authorIndex);
-    
-    newAuthor.innerHTML = `
-        <div class="author-header">
-            <h4>Author ${authorIndex + 1}</h4>
-            <button type="button" class="remove-author" onclick="removeAuthor(${authorIndex})">Remove</button>
-        </div>
-        
-        <div class="author-fields">
-            <div class="form-group">
-                <label class="form-label">Author Name <span class="required">*</span></label>
-                <input type="text" name="authors[${authorIndex}][name]" class="form-control" 
-                       placeholder="Full name of the author" 
-                       required 
-                       minlength="2"
-                       maxlength="150"
-                       pattern="[A-Za-z\s]{2,}"
-                       title="Author name must be at least 2 characters and contain only letters and spaces">
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label">Email Address</label>
-                <input type="email" name="authors[${authorIndex}][email]" class="form-control" 
-                       placeholder="author@example.com" 
-                       maxlength="150"
-                       pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
-                       title="Please enter a valid email address">
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label">Affiliation</label>
-                <input type="text" name="authors[${authorIndex}][affiliation]" class="form-control" 
-                       placeholder="University, Organization, or Company" 
-                       maxlength="255"
-                       pattern=".{0,255}"
-                       title="Affiliation must not exceed 255 characters">
-            </div>
-        </div>
-    `;
-    
-    container.appendChild(newAuthor);
-    authorIndex++;
-    
-    // Show remove button for first author if there are multiple authors
-    updateRemoveButtons();
-});
-
-function removeAuthor(index) {
-    const authorEntry = document.querySelector(`[data-author-index="${index}"]`);
-    if (authorEntry) {
-        authorEntry.remove();
-        updateAuthorNumbers();
-        updateRemoveButtons();
+    if (window.authorManagement) {
+        authorManagement.init(1);
     }
-}
-
-function updateAuthorNumbers() {
-    const authors = document.querySelectorAll('.author-entry');
-    authors.forEach((author, index) => {
-        const header = author.querySelector('h4');
-        header.textContent = `Author ${index + 1}`;
-    });
-}
-
-function updateRemoveButtons() {
-    const authors = document.querySelectorAll('.author-entry');
-    const removeButtons = document.querySelectorAll('.remove-author');
-    
-    if (authors.length > 1) {
-        removeButtons.forEach(button => button.style.display = 'inline-block');
-    } else {
-        removeButtons.forEach(button => button.style.display = 'none');
-    }
-}
+});
 </script>
 @endsection
