@@ -41,7 +41,6 @@ class AdminController extends Controller
         return redirect()->route('admin.dashboard');
     }
 
-
     // Paper Management
     public function deletePaper($id)
     {
@@ -62,7 +61,6 @@ class AdminController extends Controller
         return redirect()->route('admin.dashboard');
     }
 
-
     // Author Management
     public function deleteAuthor($id)
     {
@@ -77,7 +75,6 @@ class AdminController extends Controller
         return redirect()->route('admin.dashboard');
     }
 
-
     // Category Management
     public function deleteCategory($id)
     {
@@ -91,7 +88,6 @@ class AdminController extends Controller
         Session::flash('success', 'Category deleted successfully!');
         return redirect()->route('admin.dashboard');
     }
-
 
     // Paper Review Management (Admin can approve/reject papers)
     public function viewPaper($id)

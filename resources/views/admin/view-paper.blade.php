@@ -41,11 +41,7 @@
                     <div class="info-item"><strong>Publication Year:</strong> {{ $paper->publication_year }}</div>
                     <div class="info-item"><strong>Uploaded:</strong> {{ $paper->created_at->format('M d, Y') }}</div>
                     <div class="info-item"><strong>Uploaded By:</strong> {{ $paper->uploader->name ?? 'N/A' }}</div>
-                    <div class="info-item"><strong>Category:</strong> 
-                        @foreach($paper->categories as $category)
-                            {{ $category->name }}@if(!$loop->last), @endif
-                        @endforeach
-                    </div>
+                    <div class="info-item"><strong>Category:</strong> {{ $paper->categories->pluck('name')->implode(', ') }}</div>
                 </div>
             </div>
 
