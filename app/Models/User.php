@@ -17,6 +17,7 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
+    // $fillable = whitelist of fields jo mass assign ho sakti hain.
     protected $fillable = [
         'name',
         'email',
