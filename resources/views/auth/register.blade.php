@@ -71,16 +71,7 @@
                 @else
                     <!-- Normal role selection -->
                     <select id="role_id" name="role_id" class="form-control">
-                        <option value="">Select your role (defaults to User)</option>
-                        @if(isset($roles))
-                            @foreach($roles as $role)
-                                <option value="{{ $role->id }}" 
-                                        {{ (old('role_id') == $role->id) || 
-                                           (empty(old('role_id')) && isset($defaultRole) && $defaultRole->id == $role->id) ? 'selected' : '' }}>
-                                    {{ ucfirst($role->name) }}
-                                </option>
-                            @endforeach
-                        @endif
+                        <option value="4">Default role is Reader </option>
                     </select>
                     <div class="help-text">
                         If no role is selected, you will be registered as a User by default.
@@ -120,17 +111,6 @@
                 <label for="password" class="form-label">Password <span class="required">*</span></label>
                 <input type="password" id="password" name="password" class="form-control"
                        placeholder="Enter a strong password" 
-                       required 
-                       minlength="6"
-                       maxlength="255"
-                       pattern=".{6,}"
-                       title="Password must be at least 6 characters long">
-            </div>
-
-            <div class="form-group">
-                <label for="password_confirmation" class="form-label">Confirm Password <span class="required">*</span></label>
-                <input type="password" id="password_confirmation" name="password_confirmation" class="form-control"
-                       placeholder="Confirm your password" 
                        required 
                        minlength="6"
                        maxlength="255"

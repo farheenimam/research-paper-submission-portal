@@ -138,8 +138,10 @@
         @if($user->role->id === 2)
         <div class="papers-section">
             <div class="section-header">
-                <h2>Research Papers</h2>
-                <p>Saved By (Total: {{ $total_saved ?? 0 }}) Users</p>
+                <div>
+                    <h2>Research Papers</h2>
+                    <p style="margin: 8px 0 0 0; color: #666666; font-size: 14px; font-weight: normal;">Saved By {{ $total_saved ?? 0 }} Users</p>
+                </div>
             </div>
             
             @if($papers->count() > 0)
@@ -184,6 +186,7 @@
 
 @section('styles')
 <link href="{{ asset('css/profile.css') }}" rel="stylesheet">
+<link href="{{ asset('css/dashboard.css') }}" rel="stylesheet">
 
 {{-- Profile photo upload JavaScript is now in common.js --}}
 @endsection

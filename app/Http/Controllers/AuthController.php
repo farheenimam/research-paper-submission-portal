@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Role;
 use Illuminate\Support\Facades\Session;
 
 class AuthController extends Controller
@@ -14,30 +15,20 @@ class AuthController extends Controller
     }
 
     function registration(Request $request){
-        $roles = \App\Models\Role::all();
+        $roles = Role::all();
         // Find the 'user' role to set as default
-        $defaultRole = $roles->where('name', 'user')->first();
+        $defaultRole = Role::where('name', 'reader')->first();
         
         // Check if role is specified in URL parameter
         $selectedRole = null;
         if ($request->has('role')) {
             $roleName = strtolower(trim($request->role));
             
-            // Try to find by name (case-insensitive)
-            $selectedRole = $roles->first(function($role) use ($roleName) {
-                return strtolower($role->name) === $roleName;
-            });
-            
-            // If not found by name, try to find by ID
-            if (!$selectedRole) {
-                if ($roleName === 'reader') {
-                    $selectedRole = \App\Models\Role::find(4);
-                } elseif ($roleName === 'researcher') {
-                    // Try to find researcher by name or common ID
-                    $selectedRole = $roles->first(function($role) {
-                        $selectedRole = \App\Models\Role::find(2);
-                    });
-                }
+            if ($roleName === 'reader') {
+                $selectedRole = Role::find(4);
+            } elseif ($roleName === 'researcher') {
+                // Find researcher by ID 2
+                $selectedRole = Role::find(2);
             }
         }
         
@@ -48,7 +39,7 @@ class AuthController extends Controller
        // Check if role is pre-selected (from URL parameter)
        $preSelectedRole = null;
        if ($request->has('role_id') && !empty($request->role_id)) {
-           $preSelectedRole = \App\Models\Role::find($request->role_id);
+           $preSelectedRole = Role::find($request->role_id);
        }
        
        $validationRules = [
@@ -60,22 +51,21 @@ class AuthController extends Controller
           'profile_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
        ];
        
-       // Only validate role_id if it's not pre-selected
-       if (!$preSelectedRole) {
-           $validationRules['role_id'] = 'nullable|exists:roles,id';
-       }
-       
-       $request->validate($validationRules);
-
        // Set role ID - use pre-selected role or determine default
        $roleId = null;
        if ($preSelectedRole) {
            // Force use the pre-selected role ID (cannot be changed)
            $roleId = $preSelectedRole->id;
        } else {
-           // Set default role to 'user' if not provided
-           $defaultRole = \App\Models\Role::where('name', 'user')->first();
-           $roleId = $request->role_id ?: ($defaultRole ? $defaultRole->id : 2);
+           // Use role_id from form if provided and valid, otherwise default to 4 (Reader)
+           if ($request->has('role_id') && $request->role_id) {
+               // Validate that the role exists
+               $requestedRole = Role::find($request->role_id);
+               $roleId = $requestedRole ? $requestedRole->id : 4; // Default to 4 if invalid
+           } else {
+               // No role_id provided, explicitly use 4 (Reader) as default
+               $roleId = 4;
+           }
        }
 
        $data = [
@@ -127,7 +117,10 @@ class AuthController extends Controller
             }
             
             // Redirect based on role
-            if ($user->role_id == 4) {
+            if ($user->role_id == 2) {
+                // Researchers go to dashboard
+                return redirect()->route('dashboard');
+            } elseif ($user->role_id == 4) {
                 // Readers go to search page
                 return redirect()->route('search');
             }
