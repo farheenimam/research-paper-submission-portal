@@ -11,11 +11,7 @@ use Illuminate\Support\Facades\Session;
 
 class DashboardController extends Controller
 {
-    /**
-     * Display the researcher's dashboard with their uploaded papers
-     * 
-     * @return \Illuminate\View\View
-     */
+   
     public function index()
     {
         // Auth::user() - Gets the currently logged-in user object
@@ -42,7 +38,6 @@ class DashboardController extends Controller
     /**
      * Show the form to upload a new research paper
      * 
-     * @return \Illuminate\View\View
      */
     public function uploadPaper()
     {
@@ -54,22 +49,13 @@ class DashboardController extends Controller
         return view('dashboard.upload-paper', compact('categories'));
     }
 
-    /**
-     * Save a new research paper to database
-     * 
-     * @param Request $request - Contains form data (title, abstract, pdf_file, etc.)
-     * @return \Illuminate\Http\RedirectResponse
-     */
+   
+    
     public function storePaper(Request $request)
     {
         // $request->validate() - Validates form input according to rules
         // If validation fails, automatically redirects back with errors
-        // 'required' - Field must be present
-        // 'string' - Must be text
-        // 'max:255' - Maximum 255 characters
         // 'regex:/.*[A-Za-z].*/' - Must contain at least one letter
-        // 'file|mimes:pdf|max:10240' - Must be PDF file, max 10MB
-        // 'exists:categories,id' - Category ID must exist in categories table
         $request->validate([
             'title' => 'required|string|max:255|regex:/.*[A-Za-z].*/',
             'abstract' => 'required|string',
@@ -77,19 +63,16 @@ class DashboardController extends Controller
             'publication_year' => 'required|integer|min:1900|max:' . (date('Y') + 1),
             'category_id' => 'required|exists:categories,id',
             'authors' => 'required|array|min:1',
-            'authors.*.name' => 'required|string|max:150',
+            'authors.*.name' => 'required|string|max:150', // authors ek array hai * ka matlab: authors ke jitne bhi elements hain har author ke andar: name required hoga
             'authors.*.email' => 'nullable|email|max:150',
             'authors.*.affiliation' => 'nullable|string|max:255',
         ]);
 
-        // Handle PDF upload
         // $request->file('pdf_file') - Get uploaded file from form
         // Returns UploadedFile object
         $pdfFile = $request->file('pdf_file');
         
-        // time() - Current Unix timestamp (e.g., 1703123456)
         // getClientOriginalName() - Original filename from user's computer
-        // Combine to create unique filename: "1703123456_research_paper.pdf"
         $filename = time() . '_' . $pdfFile->getClientOriginalName();
         $pdfPath = 'papers/' . $filename;
         
