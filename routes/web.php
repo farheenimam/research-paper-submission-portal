@@ -52,17 +52,9 @@ Route::middleware('auth')->group(function () {
     
     // Admin routes
     Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
-    Route::post('/admin/users', [AdminController::class, 'storeUser'])->name('admin.store-user');
-    Route::put('/admin/users/{id}', [AdminController::class, 'updateUser'])->name('admin.update-user');
     Route::delete('/admin/users/{id}', [AdminController::class, 'deleteUser'])->name('admin.delete-user');
-    Route::post('/admin/papers', [AdminController::class, 'storePaper'])->name('admin.store-paper');
-    Route::put('/admin/papers/{id}', [AdminController::class, 'updatePaper'])->name('admin.update-paper');
     Route::delete('/admin/papers/{id}', [AdminController::class, 'deletePaper'])->name('admin.delete-paper');
-    Route::post('/admin/authors', [AdminController::class, 'storeAuthor'])->name('admin.store-author');
-    Route::put('/admin/authors/{id}', [AdminController::class, 'updateAuthor'])->name('admin.update-author');
     Route::delete('/admin/authors/{id}', [AdminController::class, 'deleteAuthor'])->name('admin.delete-author');
-    Route::post('/admin/categories', [AdminController::class, 'storeCategory'])->name('admin.store-category');
-    Route::put('/admin/categories/{id}', [AdminController::class, 'updateCategory'])->name('admin.update-category');
     Route::delete('/admin/categories/{id}', [AdminController::class, 'deleteCategory'])->name('admin.delete-category');
     
     // Admin paper review routes

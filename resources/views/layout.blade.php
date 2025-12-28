@@ -4,17 +4,16 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ asset('images/logo.png') }}?v={{ time() }}">
+    
     <link rel="stylesheet" href="css/main.css">
     
     <title>@yield('title', 'Research Portal - Academic Research Platform')</title>
     
     <!-- Meta Description -->
     <meta name="description" content="@yield('description', 'A comprehensive platform for academic research, collaboration, and knowledge sharing.')">
-    
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="{{ asset('images/logo.png') }}">
-    <link rel="shortcut icon" type="image/png" href="{{ asset('images/logo.png') }}">
-    <link rel="apple-touch-icon" href="{{ asset('images/logo.png') }}">
     
     <!-- CSS Files -->
     <link href="{{ asset('css/main.css') }}" rel="stylesheet">

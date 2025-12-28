@@ -189,23 +189,6 @@ window.profilePhoto = {
     }
 };
 
-// Admin Dashboard Forms Toggle
-window.adminForms = {
-    toggleAdd: function(type) {
-        const form = document.getElementById('add-' + type + '-form');
-        if (form) form.style.display = form.style.display === 'none' ? 'block' : 'none';
-    },
-    
-    toggleEdit: function(type, id) {
-        const form = document.getElementById('edit-' + type + '-form-' + id);
-        if (form) {
-            form.style.display = form.style.display === 'none' ? 'block' : 'none';
-            if (form.style.display === 'block') {
-                form.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-            }
-        }
-    }
-};
 
 // Initialize all common functionality on page load
 document.addEventListener('DOMContentLoaded', function() {

@@ -140,15 +140,20 @@ class AuthController extends Controller
     }
 
     function logout(){
-        // Logout the user (this also clears auth session)
-        Auth::logout();
-        
-        // Invalidate the session
-        request()->session()->invalidate();
-        
-        // Regenerate CSRF token
-        request()->session()->regenerateToken();
-        
-        return redirect(route('login'));
+        try {
+            // Logout the user (this also clears auth session)
+            Auth::logout();
+            
+            // Invalidate the session
+            request()->session()->invalidate();
+            
+            // Regenerate CSRF token
+            request()->session()->regenerateToken();
+            
+            return redirect(route('login'))->with('success', 'You have been logged out successfully.');
+        } catch (\Exception $e) {
+            // If session is already expired, just redirect to login
+            return redirect(route('login'))->with('info', 'You have been logged out.');
+        }
     }
 }

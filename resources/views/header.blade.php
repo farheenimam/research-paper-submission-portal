@@ -124,7 +124,7 @@
                             @endif
                             <div class="dropdown-divider"></div>
                             <form action="{{ route('logout') }}" method="POST" style="display: inline; margin: 0; padding: 0;">
-                                @csrf
+                                <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                 <button type="submit" class="dropdown-item" style="width: 100%; text-align: left; background: none; border: none; padding: 12px 15px; color: #333333; text-decoration: none; cursor: pointer; font-size: inherit; font-family: inherit;">
                                     Logout
                                 </button>
