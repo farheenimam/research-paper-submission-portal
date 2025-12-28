@@ -214,7 +214,8 @@ class DashboardController extends Controller
         // Update category (many-to-many relationship)
         // ->sync([$id]) - Replaces all categories with this one
         // Removes old category links and creates new one
-        $paper->categories()->sync($request->category_id);
+        // Note: sync() requires array, so wrap single ID in array
+        $paper->categories()->sync([$request->category_id]);
 
         // Get the logged-in user
         $user = Auth::user();

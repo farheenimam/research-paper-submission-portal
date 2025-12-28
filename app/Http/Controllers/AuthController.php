@@ -10,28 +10,50 @@ use Illuminate\Support\Facades\Session;
 
 class AuthController extends Controller
 {
+    /**
+     * Show login page
+     * 
+     * @return \Illuminate\View\View
+     */
     function login(){
+        // view() - Returns Blade view file
+        // 'auth.login' - Path: resources/views/auth/login.blade.php
         return view('auth.login');
     }
 
+    /**
+     * Show registration form
+     * 
+     * @param Request $request - May contain 'role' parameter from URL (?role=reader)
+     * @return \Illuminate\View\View
+     */
     function registration(Request $request){
+        // Role::all() - Get all roles from database
+        // Returns Collection of Role models
         $roles = Role::all();
-        // Find the 'user' role to set as default
+        
+        // Role::where('name', 'reader')->first() - Find role where name is 'reader'
+        // ->first() - Get first matching result or null
         $defaultRole = Role::where('name', 'reader')->first();
         
-        // Check if role is specified in URL parameter
+        // Check if role is specified in URL parameter (e.g., ?role=reader)
         $selectedRole = null;
+        // $request->has('role') - Check if 'role' parameter exists in request
         if ($request->has('role')) {
+            // strtolower() - Convert to lowercase
+            // trim() - Remove whitespace from start/end
             $roleName = strtolower(trim($request->role));
             
+            // Role::find(4) - Find role by ID (faster than where())
             if ($roleName === 'reader') {
                 $selectedRole = Role::find(4);
             } elseif ($roleName === 'researcher') {
-                // Find researcher by ID 2
                 $selectedRole = Role::find(2);
             }
         }
         
+        // compact() - Creates array from variable names
+        // ['roles' => $roles, 'defaultRole' => $defaultRole, 'selectedRole' => $selectedRole]
         return view('auth.register', compact('roles', 'defaultRole', 'selectedRole'));
     }
 
@@ -68,30 +90,52 @@ class AuthController extends Controller
            }
        }
 
+       // Prepare data array for user creation
+       // bcrypt() - Laravel helper: Hashes password securely (one-way encryption)
+       // Never store plain passwords in database!
        $data = [
-           'name' => $request->name,
-           'email' => $request->email,
-           'password' => bcrypt($request->password),
-           'role_id' => $roleId,
-           'affiliation' => $request->affiliation,
-           'bio' => $request->bio,
+           'name' => $request->name,                    // From form
+           'email' => $request->email,                 // From form
+           'password' => bcrypt($request->password),  // Hash password before saving
+           'role_id' => $roleId,                       // Determined above
+           'affiliation' => $request->affiliation,     // Optional field
+           'bio' => $request->bio,                     // Optional field
        ];
 
        // Handle profile photo upload
+       // $request->hasFile('profile_photo') - Check if file was uploaded
        if ($request->hasFile('profile_photo')) {
+           // $request->file('profile_photo') - Get uploaded file
            $profilePhoto = $request->file('profile_photo');
+           
+           // time() - Current timestamp for unique filename
+           // getClientOriginalName() - Original filename from user
            $filename = time() . '_' . $profilePhoto->getClientOriginalName();
+           
+           // public_path('uploads/profiles') - Full path to public/uploads/profiles
+           // move() - Move uploaded file to destination folder
            $profilePhoto->move(public_path('uploads/profiles'), $filename);
+           
+           // Store relative path in database (not full path)
            $data['profile_photo'] = 'uploads/profiles/' . $filename;
        }
 
+       // User::create($data) - Create new user in database
+       // Returns User model instance if successful, false if fails
        $user = User::create($data);
+       
+       // Check if user creation failed
        if (!$user) {
+           // redirect()->with() - Redirect with flash message
+           // Message stored in session, shown on next page
            return redirect(route('registration'))->with("error","Registration failed");
        }
 
-       // Set success message in session
+       // Session::flash() - Store success message in session
+       // Message will be shown on login page
        Session::flash('success', 'Registration successful! Please login.');
+       
+       // redirect(route('login')) - Redirect to login page
        return redirect(route('login'));
     }
 
@@ -101,14 +145,21 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
+        // $request->only('email', 'password') - Get only these fields from request
+        // Returns array: ['email' => 'user@example.com', 'password' => 'password123']
         $credentials = $request->only('email', 'password');
 
+        // Auth::attempt($credentials) - Try to login user
+        // Checks email/password against database
+        // Returns true if successful, false if failed
         if (Auth::attempt($credentials)) {
+            // Auth::user() - Get currently logged-in user object
             $user = Auth::user();
             
-            // Regenerate session ID for security
+            // Regenerate session ID for security (prevents session hijacking)
             $request->session()->regenerate();
             
+            // Store welcome message in session
             Session::flash('success', 'Welcome back, ' . $user->name . '!');
             
             // Hardcoded admin email redirect
