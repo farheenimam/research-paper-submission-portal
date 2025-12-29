@@ -13,11 +13,15 @@ use Illuminate\Support\Facades\Session;
 
 class AdminController extends Controller
 {
-    public function dashboard()
+    public function dashboard(Request $request)
     {
         // Check if user is admin (hardcoded email check)
         if (Auth::check() && Auth::user()->email !== 'farheenimam@gmail.com') {
             abort(403, 'Unauthorized access');
+        }
+
+        if (Auth::check()) {
+            $request->session()->increment('visits', 1);
         }
 
         $users = User::with('role')->orderBy('created_at', 'desc')->get();

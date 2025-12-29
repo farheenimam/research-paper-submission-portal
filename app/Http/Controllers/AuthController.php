@@ -107,27 +107,25 @@ class AuthController extends Controller
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
             
-            // Regenerate session ID for security
+          
+            $visits = $request->session()->get('visits', 0);
+            $visits++; // Increment visit count
+            
             $request->session()->regenerate();
  
-            $visits = $request->session()->get('visits', 0);
-            $visits++;
             $request->session()->put('visits', $visits);
-            Session::flash('visits', $visits); 
+            Session::flash('visits', $visits);
 
             Session::flash('success', 'Welcome back, ' . $user->name . '!');
             
-            // Hardcoded admin email redirect
             if ($user->email === 'farheenimam@gmail.com') {
                 return redirect()->route('admin.dashboard');
             }
+    
             
-            // Redirect based on role
             if ($user->role_id == 2) {
-                // Researchers go to dashboard
                 return redirect()->route('dashboard');
             } elseif ($user->role_id == 4) {
-                // Readers go to search page
                 return redirect()->route('search');
             }
             
@@ -142,13 +140,11 @@ class AuthController extends Controller
     try {
         $username = Auth::user()->name;
 
-        // Logout the user (clears session)
         Auth::logout();
 
-        // Invalidate the session
         request()->session()->invalidate();
 
-        request()->session()->regenerateToken();
+        // request()->session()->regenerateToken();
 
         return redirect()->route('login')->with('success', "$username logs out");
     } catch (\Exception $e) {

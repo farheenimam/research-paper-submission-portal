@@ -12,6 +12,11 @@ class SearchController extends Controller
 {
     public function search(Request $request)
     {
+        
+        if (Auth::check()) {
+            $request->session()->increment('visits', 1);
+        }
+        
         $query = $request->input('search', '');
         $categoryId = $request->input('category', '');
         $year = $request->input('year', '');

@@ -47,7 +47,8 @@ Route::middleware('auth')->group(function () {
     // Reader routes
     Route::get('/reader/saved-papers', [SearchController::class, 'savedPapers'])->name('reader.saved-papers');
     
-    // Admin routes
+    // Admin routes // Route::get('/admin/session', [AdminController::class, 'session'])->name('session.page');
+   
     Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
     Route::delete('/admin/users/{id}', [AdminController::class, 'deleteUser'])->name('admin.delete-user');
     Route::get('/admin/users/{id}', [AdminController::class, 'viewUser'])->name('admin.view-user');

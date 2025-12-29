@@ -8,7 +8,10 @@
     <div class="container">
         <div class="admin-header">
             <h1>Admin Dashboard</h1>
-            <p>Welcome {{ Auth::user()->name }}, you have to approve the total count of unapproved papers: {{ $total_count }}</p>
+            <p>Welcome Admin {{ Auth::user()->name }}, you have to approve the total count of unapproved papers: {{ $total_count }}</p>
+            @if(session('visits'))
+                <p >You have visited this site {{ session('visits') }} times this session.</p>
+            @endif
             <p>Manage users, papers, authors, and categories</p>
         </div>
 
