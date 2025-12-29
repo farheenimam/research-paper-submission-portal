@@ -87,6 +87,11 @@
                             </a>
                         </li>
                         <li class="nav-item">
+                             <a href="{{ route('reader.saved-papers') }}" class="dropdown-item">
+                                    Saved Papers
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard*') ? 'active' : '' }}">
                                 My Research
                             </a>

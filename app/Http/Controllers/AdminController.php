@@ -24,8 +24,11 @@ class AdminController extends Controller
         $papers = Paper::with(['uploader', 'categories'])->orderBy('created_at', 'desc')->get();
         $authors = PaperAuthor::with(['paper', 'user'])->orderBy('id', 'desc')->get();
         $categories = Category::orderBy('name', 'asc')->get();
+        // total count of the unapproved paper
+        $total_count = Paper::where('status', 'pending')->count();
 
-        return view('admin.dashboard', compact('users', 'papers', 'authors', 'categories'));
+
+        return view('admin.dashboard', compact('users', 'papers', 'authors', 'categories', 'total_count'));
     }
 
     // User Management
@@ -41,6 +44,7 @@ class AdminController extends Controller
         Session::flash('success', 'User deleted successfully!');
         return redirect()->route('admin.dashboard');
     }
+    // tell the total number of count of the saved papers
 
     // Paper Management
     public function deletePaper($id)
@@ -61,6 +65,8 @@ class AdminController extends Controller
         Session::flash('success', 'Paper deleted successfully!');
         return redirect()->route('admin.dashboard');
     }
+
+    
 
     // Author Management
     public function deleteAuthor($id)

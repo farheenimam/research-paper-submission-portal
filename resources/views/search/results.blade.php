@@ -14,6 +14,10 @@
         <div class="container">
             <div class="search-header-content">
                 <h1>Research Portal</h1>
+                @if(session('visits'))
+                    <p>You have visited this site {{ session('visits') }} times this session.</p>
+                @endif
+
                 <div class="search-container-page">
                     {{-- @include('components.search-form', ...) - Includes reusable search form component --}}
                     {{-- Passes data to component: route name, current query, placeholder text, and hidden fields --}}
@@ -60,9 +64,18 @@
                         <p class="results-info">
                             {{-- @if($totalResults > 0) - Check if results found --}}
                             @if($totalResults > 0)
-                                {{-- number_format($totalResults) - Formats number with commas (e.g., 1,234) --}}
+                                {{-6. Session Timeout / Auto-Logout Warning
+
+Track login time in session:
+
+session(['login_time' => now()]);
+
+
+Show warning if user has been idle for X minutes.
+
+help me implement this- number_format($totalResults) - Formats number with commas (e.g., 1,234) --}}
                                 {{-- $totalResults != 1 ? 's' : '' - Adds 's' for plural (1 result vs 2 results) --}}
-                                About {{ number_format($totalResults) }} result{{ $totalResults != 1 ? 's' : '' }} (0.09 sec)
+                                About {{ number_format($totalResults) }} result
                                 {{-- Show search query if user searched --}}
                                 @if(!empty($query))
                                     for "<strong>{{ $query }}</strong>"
@@ -82,7 +95,6 @@
                     <div class="papers-list-horizontal">
                         {{-- @foreach($papers as $paper) - Loop through each paper in collection --}}
                         @foreach($papers as $paper)
-                            {{-- @php ... @endphp - Execute PHP code in Blade template --}}
                             {{-- Check if current paper is saved by logged-in user --}}
                             {{-- Auth::check() - Check if user is logged in --}}
                             {{-- in_array($paper->id, $savedPaperIds) - Check if paper ID exists in saved papers array --}}

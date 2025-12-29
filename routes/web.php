@@ -14,7 +14,6 @@ Route::get('/', function () {
         if (auth()->user()->email === 'farheenimam@gmail.com') {
             return redirect()->route('admin.dashboard');
         }
-        // Redirect all users to search page
         return redirect()->route('search');
     }
     return view('welcome');

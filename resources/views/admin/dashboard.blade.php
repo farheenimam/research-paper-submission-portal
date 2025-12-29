@@ -8,6 +8,7 @@
     <div class="container">
         <div class="admin-header">
             <h1>Admin Dashboard</h1>
+            <p>Welcome {{ Auth::user()->name }}, you have to approve the total count of unapproved papers: {{ $total_count }}</p>
             <p>Manage users, papers, authors, and categories</p>
         </div>
 
@@ -79,7 +80,7 @@
                         @foreach($papers as $paper)
                             <tr>
                                 <td>{{ $paper->id }}</td>
-                                <td>{{ Str::limit($paper->title, 50) }}</td>
+                                <td>{{ Str::limit($paper->title, 25) }}</td>
                                 <td>{{ $paper->uploader->name ?? 'N/A' }}</td>
                                 <td><span class="status-badge status-{{ $paper->status }}">{{ ucfirst($paper->status) }}</span></td>
                                 <td>{{ $paper->categories->first()->name ?? 'N/A' }}</td>

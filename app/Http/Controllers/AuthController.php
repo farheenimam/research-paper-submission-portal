@@ -94,6 +94,7 @@ class AuthController extends Controller
        Session::flash('success', 'Registration successful! Please login.');
        return redirect(route('login'));
     }
+    
 
     function loginPost(Request $request){
         $request->validate([
@@ -108,7 +109,12 @@ class AuthController extends Controller
             
             // Regenerate session ID for security
             $request->session()->regenerate();
-            
+ 
+            $visits = $request->session()->get('visits', 0);
+            $visits++;
+            $request->session()->put('visits', $visits);
+            Session::flash('visits', $visits); 
+
             Session::flash('success', 'Welcome back, ' . $user->name . '!');
             
             // Hardcoded admin email redirect
@@ -133,20 +139,21 @@ class AuthController extends Controller
     }
 
     function logout(){
-        try {
-            // Logout the user (this also clears auth session)
-            Auth::logout();
-            
-            // Invalidate the session
-            request()->session()->invalidate();
-            
-            // Regenerate CSRF token
-            request()->session()->regenerateToken();
-            
-            return redirect(route('login'))->with('success', 'You have been logged out successfully.');
-        } catch (\Exception $e) {
-            // If session is already expired, just redirect to login
-            return redirect(route('login'))->with('info', 'You have been logged out.');
-        }
+    try {
+        $username = Auth::user()->name;
+
+        // Logout the user (clears session)
+        Auth::logout();
+
+        // Invalidate the session
+        request()->session()->invalidate();
+
+        request()->session()->regenerateToken();
+
+        return redirect()->route('login')->with('success', "$username logs out");
+    } catch (\Exception $e) {
+        return redirect()->route('login')->with('info', "User has been logged out.");
     }
+}
+
 }
