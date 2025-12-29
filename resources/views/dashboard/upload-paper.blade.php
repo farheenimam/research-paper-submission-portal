@@ -31,7 +31,7 @@
                 <div class="form-group">
                     <label for="title" class="form-label">Paper Title <span class="required">*</span></label>
                     <input type="text" id="title" name="title" class="form-control" 
-                           placeholder="Enter the title of your research paper" 
+                           placeholder="Enter the title of your research paper. Title must be between 5 and 255 characters" 
                            value="{{ old('title') }}" 
                            required 
                            minlength="5"
@@ -42,11 +42,15 @@
 
                 <div class="form-group">
                     <label for="abstract" class="form-label">Abstract <span class="required">*</span></label>
+                    {{-- pattern="(?=.*[A-Za-z]).{50,}" - Requires at least one letter, digits are optional --}}
+                    {{-- (?=.*[A-Za-z]) - Must contain at least one letter (A-Z or a-z) --}}
+                    {{-- .{50,} - At least 50 characters total (letters, digits, spaces, punctuation all allowed) --}}
                     <textarea id="abstract" name="abstract" class="form-control abstract-field" 
-                              placeholder="Provide a comprehensive abstract of your research paper" 
+                              placeholder="Provide a comprehensive abstract of your research paper. Minimum 50 characters required." 
                               required
                               minlength="50"
-                              title="Abstract must be at least 50 characters long">{{ old('abstract') }}</textarea>
+                              pattern="(?=.*[A-Za-z]).{50,}"
+                              title="Abstract Criteria: Minimum 50 characters required. Must contain at least one letter (A-Z or a-z). Digits (0-9) are optional. Spaces, punctuation, and other characters are allowed.">{{ old('abstract') }}</textarea>
                     <div class="help-text">Provide a detailed summary of your research, methodology, and findings.</div>
                 </div>
 

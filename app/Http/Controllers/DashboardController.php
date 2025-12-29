@@ -48,7 +48,10 @@ class DashboardController extends Controller
         // If validation fails, automatically redirects back with errors
         $request->validate([
             'title' => 'required|string|max:255|regex:/.*[A-Za-z].*/',
-            'abstract' => 'required|string',
+            // abstract validation: requires at least one letter, digits are optional
+            // regex:/.*[A-Za-z].*/ - Must contain at least one letter (A-Z or a-z)
+            // Digits, spaces, and punctuation are allowed but not required
+            'abstract' => 'required|string|min:50|regex:/.*[A-Za-z].*/',
             'pdf_file' => 'required|file|mimes:pdf|max:10240', // 10MB max
             'publication_year' => 'required|integer|min:1900|max:' . (date('Y') + 1),
             'category_id' => 'required|exists:categories,id',
